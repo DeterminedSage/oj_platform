@@ -9,6 +9,7 @@ import Contribute from './pages/contribute'
 import Report from './pages/remove'
 import Login from './pages/login'
 import Register from './pages/register'
+import Problemset from './pages/problemset'
 
 // function App() {
 
@@ -43,6 +44,7 @@ function App() {
           <Route path="/report" element={<Report />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/problemset" element={<Problemset />} />
         </Routes>
       </main>
       <Footer />
