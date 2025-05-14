@@ -2,27 +2,11 @@ import './App.css'
 import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-
-// Import pages
-// import App from './'
 import Contribute from './pages/contribute'
 import Report from './pages/remove'
 import Login from './pages/login'
 import Register from './pages/register'
 import Problemset from './pages/problemset'
-
-// function App() {
-
-//   return (
-//     <>
-//       <Navbar/>
-//        <h1>Intro page , thhis will include all into content + maybe a couple of images</h1>
-//        <Footer/>
-//     </>
-//   )
-// }
-
-// export default App
 
 function Home() {
   return (
