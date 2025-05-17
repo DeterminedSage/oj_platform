@@ -68,13 +68,18 @@ function Register(){
       });
 
       const result = await response.json();
-      const { success,message } = result;
+      const { success,message} = result;
+      
       if(success){
           handleSuccess(message);
           setTimeout(() => {
             navigate('/login');
           }, 1000);
       }
+      else{
+          handleError(message);
+      }
+
       console.log(result);
 
     } catch (err) {
