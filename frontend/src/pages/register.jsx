@@ -1,7 +1,7 @@
 import React,{useState} from 'react'
 import { Link ,useNavigate} from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
-import { handleError } from '../utils'
+import { handleError, handleSuccess } from '../utils'
 
 function Register(){
 
@@ -18,6 +18,8 @@ function Register(){
     mail: "",
     password: "",
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -45,42 +47,11 @@ function Register(){
       return handleError('Please accept the terms and conditions');
     }
 
-    // Update sendInfo before sending
     setSendInfo({
       name: fullName,
       email,
       password,
     });
-
-    // try{
-    //   const url = "http://localhost:8080/auth/signup";
-    //   const response = await fetch(url,{
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json"
-    //     },
-    //     body: JSON.stringify(signupInfo)
-    //   })
-    // } catch (err) {
-    //   handleError(err);
-    // }
-
-  //   console.log(sendInfo);
-
-  // try {
-  //   const url = "http://localhost:8080/auth/signup";
-  //   const response = await fetch(url, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json"
-  //     },
-  //     body: JSON.body : JSON.stringify({ name, email: email, password: password })
-  //   });
-  //   const result = await response.json();
-  //   console.log(result);
-  // } catch (err) {
-  //   handleError(err);
-  // }
 
       try {
       const url = 'http://localhost:8080/auth/signup';
@@ -97,7 +68,15 @@ function Register(){
       });
 
       const result = await response.json();
+      const { success,message } = result;
+      if(success){
+          handleSuccess(message);
+          setTimeout(() => {
+            navigate('/login');
+          }, 1000);
+      }
       console.log(result);
+
     } catch (err) {
       handleError(err);
     }

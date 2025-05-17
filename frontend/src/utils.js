@@ -7,7 +7,7 @@ export const handleSuccess = (msg) => {
 }
 
 export const handleError = (msg) => {
-    toast.success(msg, {
+    toast.error(msg, {
         position: 'top-right'
     });
 }
