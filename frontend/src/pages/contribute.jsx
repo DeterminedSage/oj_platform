@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { handleError } from '../utils';
+import { handleError, handleSuccess } from '../utils';
+import { ToastContainer } from 'react-toastify';
 
 const Contribute = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -75,10 +76,11 @@ const Contribute = () => {
 
   // Basic validation
   if (!title || !description || !difficulty || !numberOfTests || !testCases.length) {
-    return handleError("All fields including at least one test case are required.");
+    return handleError("All fields are required.");
   }
 
-  if (!['Easy', 'Medium', 'Hard'].includes(difficulty.toLowerCase())) {
+  console.log(difficulty);
+  if (!['easy', 'medium', 'hard'].includes(difficulty.toLowerCase())) {
     return handleError("Difficulty must be one of: Easy, Medium, or Hard.");
   }
 
@@ -94,7 +96,9 @@ const Contribute = () => {
     }
   }
 
+  // console.log("hi");
   try {
+    // console.log("backend called");
     const url = 'http://localhost:8080/contribute/addQues'; // adjust if needed
     const token = localStorage.getItem('token');
 
@@ -141,7 +145,7 @@ const Contribute = () => {
       <h2 className="text-xl font-semibold mb-4 text-white">
         Hi {username}, specify the details of the question you wish to add:
       </h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form noValidate onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block font-medium mb-1 text-gray-200">Question Title (max 20 chars)</label>
           <input
@@ -182,9 +186,9 @@ const Contribute = () => {
             required
           >
             <option value="">Select</option>
-            <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
-            <option value="Hard">Hard</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
           </select>
         </div>
 
@@ -240,6 +244,7 @@ const Contribute = () => {
           Submit Question
         </button>
       </form>
+      <ToastContainer/>
     </div>
   );
 };

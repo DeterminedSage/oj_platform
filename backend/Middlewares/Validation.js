@@ -2,17 +2,19 @@ const joi = require('joi');
 
 const addQuestionValidation = (req, res, next) => {
     const schema = joi.object({
-        title: joi.string().min(1).max(20).required(),
-        description: joi.string().min(1).max(350).required(),
+        title: joi.string().required(),
+        description: joi.string().required(),
         difficulty: joi.string().valid('easy', 'medium', 'hard').required(),
-        numberOfTests: joi.number().min(5).max(20).required(),
+        numberOfTests: joi.number().required(),
         testCases: joi.array().items(
             joi.object({
-                input: joi.string().min(1).required(),
-                output: joi.string().min(1).required()
+                input: joi.string().required(),
+                output: joi.string().required()
             })
         ).required()
     });
+
+    console.log(req.body);
 
     const { error } = schema.validate(req.body);
 
