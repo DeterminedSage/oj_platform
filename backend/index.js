@@ -5,7 +5,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const { DBConnection } = require('./Models/db');
-const AuthRouter = require('./Routes/AuthRouter');
+const Router = require('./Routes/Router');
 
 DBConnection();
 
@@ -17,7 +17,8 @@ app.get('/ping',(req,res) => {
 
 app.use(bodyParser.json());
 app.use(cors());
-app.use('/auth', AuthRouter); 
+app.use('/auth', Router); 
+app.use('/contribute', Router); 
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

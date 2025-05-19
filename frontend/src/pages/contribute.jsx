@@ -1,122 +1,12 @@
-// import React, { useState, useEffect } from 'react';
-
-// const Contribute = () => {
-//   const [isAuthenticated, setIsAuthenticated] = useState(false);
-//   const [username, setUsername] = useState('');
-//   const [formData, setFormData] = useState({
-//     questionTitle: '',
-//     questionDescription: '',
-//     difficulty: ''
-//   });
-
-//   useEffect(() => {
-//     const token = localStorage.getItem('token');
-//     const loggedInUser = localStorage.getItem('loggedInUser');
-
-//     if (token && loggedInUser) {
-//       setIsAuthenticated(true);
-//       setUsername(loggedInUser);
-//     }
-//   }, []);
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-
-//     if (name === 'questionTitle' && value.length > 20) return;
-//     if (name === 'questionDescription' && value.length > 350) return;
-
-//     setFormData(prev => ({
-//       ...prev,
-//       [name]: value
-//     }));
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     console.log("Submitted Question:", formData);
-//     alert("Question submitted successfully!");
-//   };
-
-//   if (!isAuthenticated) {
-//     return <div className="text-center text-white mt-10">Please login to contribute questions.</div>;
-//   }
-
-//   return (
-//     <div className="max-w-xl mx-auto mt-10 p-6 border rounded-lg shadow-md bg-gray-900">
-//       <h2 className="text-xl font-semibold mb-4 text-white">
-//         Hi {username}, specify the details of the question you wish to add:
-//       </h2>
-//       <form onSubmit={handleSubmit} className="space-y-4">
-//         <div>
-//           <label className="block font-medium mb-1 text-gray-200">Question Title (max 20 chars)</label>
-//           <input
-//             type="text"
-//             name="questionTitle"
-//             value={formData.questionTitle}
-//             onChange={handleChange}
-//             className="w-full border border-gray-700 bg-gray-800 text-white px-3 py-2 rounded"
-//             required
-//           />
-//           <div className="text-sm text-gray-400 mt-1">
-//             {formData.questionTitle.length}/20
-//           </div>
-//         </div>
-
-//         <div>
-//           <label className="block font-medium mb-1 text-gray-200">Question Description</label>
-//           <textarea
-//             name="questionDescription"
-//             value={formData.questionDescription}
-//             onChange={handleChange}
-//             className="w-full border border-gray-700 bg-gray-800 text-white px-3 py-2 rounded"
-//             rows="6"
-//             required
-//           />
-//           <div className="text-sm text-gray-400 mt-1">
-//             {formData.questionDescription.length}/350
-//           </div>
-//         </div>
-
-//         <div>
-//           <label className="block font-medium mb-1 text-gray-200">Difficulty</label>
-//           <select
-//             name="difficulty"
-//             value={formData.difficulty}
-//             onChange={handleChange}
-//             className="w-full border border-gray-700 bg-gray-800 text-white px-3 py-2 rounded"
-//             required
-//           >
-//             <option value="">Select</option>
-//             <option value="Easy">Easy</option>
-//             <option value="Medium">Medium</option>
-//             <option value="Hard">Hard</option>
-//           </select>
-//         </div>
-
-//         <button
-//           type="submit"
-//           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-//         >
-//           Submit Question
-//         </button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default Contribute;
-
-
-
-
 import React, { useState, useEffect } from 'react';
+import { handleError } from '../utils';
 
 const Contribute = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState('');
   const [formData, setFormData] = useState({
-    questionTitle: '',
-    questionDescription: '',
+    title: '',
+    description: '',
     difficulty: '',
     numberOfTests: '',
     testCases: []
@@ -135,8 +25,8 @@ const Contribute = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === 'questionTitle' && value.length > 20) return;
-    if (name === 'questionDescription' && value.length > 350) return;
+    if (name === 'title' && value.length > 20) return;
+    if (name === 'description' && value.length > 350) return;
 
     const nextFormData = {
       ...formData,
@@ -172,11 +62,75 @@ const Contribute = () => {
     console.log(nextFormData);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Submitted Question:", formData);
-    alert("Question submitted successfully!");
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log("Submitted Question:", formData);
+  //   alert("Question submitted successfully!");
+  // };
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const { title, description, difficulty, numberOfTests, testCases } = formData;
+
+  // Basic validation
+  if (!title || !description || !difficulty || !numberOfTests || !testCases.length) {
+    return handleError("All fields including at least one test case are required.");
+  }
+
+  if (!['Easy', 'Medium', 'Hard'].includes(difficulty.toLowerCase())) {
+    return handleError("Difficulty must be one of: Easy, Medium, or Hard.");
+  }
+
+  if (Number(numberOfTests) < 5 || Number(numberOfTests) > 20) {
+    return handleError("Number of tests must be between 5 and 20.");
+  }
+
+  // Validate test cases
+  for (let i = 0; i < testCases.length; i++) {
+    const { input, output } = testCases[i];
+    if (!input || !output) {
+      return handleError(`Test case ${i + 1} is incomplete.`);
+    }
+  }
+
+  try {
+    const url = 'http://localhost:8080/contribute/addQues'; // adjust if needed
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const result = await response.json();
+    console.log(result);
+
+    const { success, message } = result;
+
+    if (success) {
+      handleSuccess(message || "Question submitted successfully!");
+      // Optional: Reset form
+      setFormData({
+        title: '',
+        description: '',
+        difficulty: '',
+        numberOfTests: '',
+        testCases: [],
+      });
+    } else {
+      handleError(message || "Failed to submit question.");
+    }
+  } catch (err) {
+    console.error(err);
+    handleError("Something went wrong while submitting the question.");
+  }
+};
+
 
   if (!isAuthenticated) {
     return <div className="text-center text-white mt-10">Please login to contribute questions.</div>;
@@ -192,29 +146,29 @@ const Contribute = () => {
           <label className="block font-medium mb-1 text-gray-200">Question Title (max 20 chars)</label>
           <input
             type="text"
-            name="questionTitle"
-            value={formData.questionTitle}
+            name="title"
+            value={formData.title}
             onChange={handleChange}
             className="w-full border border-gray-700 bg-gray-800 text-white px-3 py-2 rounded"
             required
           />
           <div className="text-sm text-gray-400 mt-1">
-            {formData.questionTitle.length}/20
+            {formData.title.length}/20
           </div>
         </div>
 
         <div>
           <label className="block font-medium mb-1 text-gray-200">Question Description</label>
           <textarea
-            name="questionDescription"
-            value={formData.questionDescription}
+            name="description"
+            value={formData.description}
             onChange={handleChange}
             className="w-full border border-gray-700 bg-gray-800 text-white px-3 py-2 rounded"
             rows="6"
             required
           />
           <div className="text-sm text-gray-400 mt-1">
-            {formData.questionDescription.length}/350
+            {formData.description.length}/350
           </div>
         </div>
 
