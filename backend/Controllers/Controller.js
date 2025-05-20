@@ -104,11 +104,12 @@ const login = async (req, res) => {
 
 
 const getQues = async (req, res) => {
+    // console.log("JWT:", token);
   console.log(req.query);
   const { id, qtitle } = req.query;
 
   const allQuestions = await QuesModel.find({}, { _id: 0, qid: 1, title: 1 });
-console.log("All questions in DB:", allQuestions);
+  console.log("All questions in DB:", allQuestions);
 
 
   try {
@@ -125,52 +126,147 @@ console.log("All questions in DB:", allQuestions);
     }
 
     if (!question) {
-      return res.status(404).json({ message: 'Question not found' });
+      return res.status(200).json({ 
+        success: true, 
+        question: null
+      });
     }
 
-    res.status(200).json({ question });
+    return res.status(200).json({ 
+      success: true, 
+      message: "Question found",
+      question
+    });
+
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    return res.status(200).json({ 
+      success: true, 
+      question: null
+    });
   }
 }
 
-// const login = async (req, res) => {
-//     try {
-//         const {email,password} = req.body;
-//         const user = await UserModel.findOne({email});
-//         const errorMsg = "Auth failed email or password is incorrect";
-//         if(!user){
-//             return res.status(403).json({message: errorMsg , success: false});
-//         }
-//         const isPassEqual = await bcrypt.compare(password,user.password);
-//         if(!isPassEqual){
-//             return res.status(403).json({message: errorMsg , success: false});
-//         }
-
-//         const jwtToken = jwt.sign(
-//             {email: user.email,_id:user._id},
-//             process.env.JWT_SECRET,
-//             {expiresIn: "1h"}
-//         )
-
-//         res.status(200).json({
-//             message: "Login success",
-//             success: true,
-//             jwtToken,
-//             email,
-//             name: user.name
-//         })
-//     } catch (err) {
-//         res.status(500).json({
-//             message: "Internal server error",
-//             success: false
-//         })
-//     }
+// const deleteQues = async (req, res) => {
+    
 // }
+
+    const deletedQues = async (req, res) => {
+        const { quesId } = req.params;
+        console.log("quesId:", quesId);
+
+    if (!quesId) {
+        return res.status(400).json({
+        success: false,
+        message: 'Question ID (quesId) is required',
+        });
+    }
+
+    try {
+        //const result = await Question.deleteOne({ qid: quesId });
+        // const x = +quesId;
+        const result = await QuesModel.deleteOne({ qid: Number(quesId) });
+
+        if (result.deletedCount === 0) {
+        return res.status(404).json({
+            success: false,
+            message: 'Question not found or already deleted',
+        });
+        }
+
+        res.status(200).json({
+        success: true,
+        message: 'Question deleted successfully',
+        });
+    } catch (error) {
+        res.status(500).json({
+        success: false,
+        message: 'Server error',
+        error: error.message,
+        });
+    }
+    };
+
+        const deleteQues = async (req, res) => {
+        const { quesId } = req.params;
+        console.log("quesId:", quesId);
+
+    if (!quesId) {
+        return res.status(400).json({
+        success: false,
+        message: 'Question ID (quesId) is required',
+        });
+    }
+
+    try {
+        //const result = await Question.deleteOne({ qid: quesId });
+        // const x = +quesId;
+        const result = await QuesModel.deleteOne({ qid: Number(quesId) });
+
+        if (result.deletedCount === 0) {
+        return res.status(404).json({
+            success: false,
+            message: 'Question not found or already deleted',
+        });
+        }
+
+        res.status(200).json({
+        success: true,
+        message: 'Question deleted successfully',
+        });
+    } catch (error) {
+        res.status(500).json({
+        success: false,
+        message: 'Server error',
+        error: error.message,
+        });
+    }
+    };
+
+    const updateQues = async (req, res) => {
+  const { quesId } = req.params;
+  const updatedData = req.body;
+
+  if (!quesId) {
+    return res.status(400).json({
+      success: false,
+      message: 'Question ID (quesId) is required',
+    });
+  }
+
+  try {
+     const result = await QuesModel.findOneAndUpdate(
+      { qid: Number(quesId) },   // match on your custom field
+      updatedData,
+      { new: true }              // return the updated document
+    );
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: 'Question not found',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Question updated successfully',
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+      error: error.message,
+    });
+  }
+};
+
 
 module.exports = {
     signup,
     login,
     addQues,
     getQues,
+    deleteQues,
+    updateQues,
 }

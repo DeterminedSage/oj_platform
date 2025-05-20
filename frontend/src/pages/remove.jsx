@@ -12,18 +12,22 @@ const Report = () => {
 
   if (!token) return null;
 
+  // const result = null;
+
   const handleSearch = async (e) => {
 
     e.preventDefault();
 
     const url = `http://localhost:8080/enquiry/getQues?${searchType}=${encodeURIComponent(searchValue)}`
-
+    console.log(url);
     try {
       const response = await fetch(url, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      console.log(token);
 
       const result = await response.json();
 
@@ -32,7 +36,7 @@ const Report = () => {
         setQuestion(null);
       } else {
         setQuestion(result.question); 
-        handleSuccess("Question found.");
+        handleSuccess("Question founderation");
       }
     } catch (err) {
       console.error(err);
@@ -41,8 +45,8 @@ const Report = () => {
   };
 
   const handleDelete = async () => {
-    const url = `http://localhost:8080/report/deleteQues/${question._id}`; // or `id` depending on response
-
+    const url = `http://localhost:8080/report/deleteQues/${question.qid}`; // or `id` depending on response
+    console.log(question.qid);
     try {
       const response = await fetch(url, {
         method: 'DELETE',
@@ -66,7 +70,7 @@ const Report = () => {
   };
 
   const handleUpdate = async () => {
-    const url = `http://localhost:8080/contribute/updateQues/${question._id}`; // adjust path
+    const url = `http://localhost:8080/report/updateQues/${question.qid}`; // adjust path
 
     try {
       const response = await fetch(url, {
