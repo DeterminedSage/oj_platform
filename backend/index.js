@@ -19,6 +19,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use('/auth', Router); 
 app.use('/contribute', Router); 
+app.use('/enquiry', Router);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
