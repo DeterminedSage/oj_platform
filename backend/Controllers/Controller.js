@@ -186,7 +186,7 @@ const getQues = async (req, res) => {
     }
     };
 
-        const deleteQues = async (req, res) => {
+    const deleteQues = async (req, res) => {
         const { quesId } = req.params;
         console.log("quesId:", quesId);
 
@@ -223,43 +223,43 @@ const getQues = async (req, res) => {
     };
 
     const updateQues = async (req, res) => {
-  const { quesId } = req.params;
-  const updatedData = req.body;
+      const { quesId } = req.params;
+      const updatedData = req.body;
 
-  if (!quesId) {
-    return res.status(400).json({
-      success: false,
-      message: 'Question ID (quesId) is required',
-    });
-  }
+      if (!quesId) {
+        return res.status(400).json({
+          success: false,
+          message: 'Question ID (quesId) is required',
+        });
+      }
 
-  try {
-     const result = await QuesModel.findOneAndUpdate(
-      { qid: Number(quesId) },   // match on your custom field
-      updatedData,
-      { new: true }              // return the updated document
-    );
+      try {
+        const result = await QuesModel.findOneAndUpdate(
+          { qid: Number(quesId) },   // match on your custom field
+          updatedData,
+          { new: true }              // return the updated document
+        );
 
-    if (!result) {
-      return res.status(404).json({
-        success: false,
-        message: 'Question not found',
-      });
-    }
+        if (!result) {
+          return res.status(404).json({
+            success: false,
+            message: 'Question not found',
+          });
+        }
 
-    res.status(200).json({
-      success: true,
-      message: 'Question updated successfully',
-      data: result,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Server error',
-      error: error.message,
-    });
-  }
-};
+        res.status(200).json({
+          success: true,
+          message: 'Question updated successfully',
+          data: result,
+        });
+      } catch (error) {
+        res.status(500).json({
+          success: false,
+          message: 'Server error',
+          error: error.message,
+        });
+      }
+    };
 
 
 module.exports = {
