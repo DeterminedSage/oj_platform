@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 function List() {
@@ -43,7 +44,14 @@ function List() {
               className={idx % 2 === 0 ? "bg-gray-900 text-gray-100 text-center" : "bg-gray-700 text-gray-100 text-center"}
             >
               <td className="px-4 py-2 border border-gray-800">{q.qid}</td>
-              <td className="px-4 py-2 border border-gray-800">{q.title}</td>
+              <td className="px-4 py-2 border border-gray-800">
+                <Link
+                    to={`/question/${q.qid}`}
+                    className="text-blue-400 hover:underline hover:text-blue-300"
+                >
+                    {q.title}
+                </Link>
+              </td>
               <td className={`px-4 py-2 border border-gray-800 capitalize ${
                 q.difficulty === 'easy'
                   ? 'text-green-400'

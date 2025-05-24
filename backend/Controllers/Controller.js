@@ -108,8 +108,8 @@ const getQues = async (req, res) => {
   console.log(req.query);
   const { id, qtitle } = req.query;
 
-  const allQuestions = await QuesModel.find({}, { _id: 0, qid: 1, title: 1 });
-  console.log("All questions in DB:", allQuestions);
+  // const allQuestions = await QuesModel.find({}, { _id: 0, qid: 1, title: 1 });
+  // console.log("All questions in DB:", allQuestions);
 
 
   try {
