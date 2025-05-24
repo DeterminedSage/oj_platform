@@ -7,6 +7,7 @@ import Report from './pages/remove'
 import Login from './pages/login'
 import Register from './pages/register'
 import Problemset from './pages/problemset'
+import Sidebar from './components/Sidebar'
 
 function Home() {
   return (
@@ -21,6 +22,7 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
+      <Sidebar />
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
