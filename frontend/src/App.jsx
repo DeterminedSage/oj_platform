@@ -8,6 +8,7 @@ import Login from './pages/login'
 import Register from './pages/register'
 import Problemset from './pages/problemset'
 import Sidebar from './components/Sidebar'
+import List from './pages/list'
 
 function Home() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/problemset" element={<Problemset />} />
+          <Route path="/list" element={<List />} />
         </Routes>
       </main>
       <Footer />

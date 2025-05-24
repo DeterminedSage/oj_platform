@@ -3,6 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 
 function Sidebar() {
   const location = useLocation();
+  const token = localStorage.getItem('token');
+
+  if (!token) return null;
 
   const links = [
     { path: '/', label: 'Home' },

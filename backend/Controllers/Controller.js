@@ -261,6 +261,18 @@ const getQues = async (req, res) => {
       }
     };
 
+    const getAllQues = async (req, res) => {
+      try {
+        const questions = await QuesModel.find()
+          .sort({ qid: 1 }) // sort by qid ascending
+          .select('qid title difficulty'); // only include these fields
+        res.status(200).json(questions);
+      } catch (err) {
+        console.error('Error fetching questions:', err);
+        res.status(500).json({ error: 'Failed to fetch questions' });
+      }
+    };
+
 
 module.exports = {
     signup,
@@ -269,4 +281,5 @@ module.exports = {
     getQues,
     deleteQues,
     updateQues,
+    getAllQues,
 }
