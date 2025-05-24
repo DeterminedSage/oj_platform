@@ -124,6 +124,8 @@ const ViewQuestion = () => {
   const [searchType, setSearchType] = useState('id');
   const [searchValue, setSearchValue] = useState('');
   const [question, setQuestion] = useState(null);
+  const [input, setInput] = useState("");
+
 
   const [code, setCode] = useState(`#include <iostream>\n\nint main() {\n  std::cout << "Hello World!";\n  return 0;\n}`);
   const [output, setOutput] = useState('');
@@ -152,7 +154,7 @@ const ViewQuestion = () => {
   };
 
   const handleRun = async () => {
-    const payload = { language: 'cpp', code };
+    const payload = { language: 'cpp', code , input };
     try {
       const { data } = await axios.post('http://localhost:8080/run', payload);
       setOutput(data.output);
@@ -229,6 +231,16 @@ const ViewQuestion = () => {
                   color: 'white',
                   height: '100%',
                 }}
+              />
+            </div>
+            <div className="mt-4">
+              <label className="block mb-1 font-medium text-gray-300">Custom Input (stdin):</label>
+              <textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Enter your input here (used as stdin)"
+                className="w-full p-2 rounded bg-gray-100 border border-gray-300 text-black"
+                rows={4}
               />
             </div>
             <button
