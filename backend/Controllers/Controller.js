@@ -104,13 +104,9 @@ const login = async (req, res) => {
 
 
 const getQues = async (req, res) => {
-    // console.log("JWT:", token);
+
   console.log(req.query);
   const { id, qtitle } = req.query;
-
-  // const allQuestions = await QuesModel.find({}, { _id: 0, qid: 1, title: 1 });
-  // console.log("All questions in DB:", allQuestions);
-
 
   try {
     let question;
@@ -131,6 +127,8 @@ const getQues = async (req, res) => {
         question: null
       });
     }
+
+    question.testCases = question.testCases.slice(0, 2);
 
     return res.status(200).json({ 
       success: true, 

@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-javascript'; // Add language support as needed
 
 function QuestionDetails() {
   const { qid } = useParams();
   const [question, setQuestion] = useState(null);
+  const [code, setCode] = useState('');
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
 
   useEffect(() => {
     const fetchQuestion = async () => {
@@ -19,6 +25,22 @@ function QuestionDetails() {
 
     fetchQuestion();
   }, [qid]);
+
+  // const handleRun = async () => {
+  //   // Placeholder: Implement code execution logic here
+  //   setOutput('Code execution result will appear here.');
+  // };
+
+  const handleRun = async () => {
+    const payload = { language: 'cpp', code , input };
+    try {
+      const { data } = await axios.post('http://localhost:8080/run', payload);
+      setOutput(data.output);
+    } catch (error) {
+      console.error(error);
+      setOutput('Error executing code.');
+    }
+  };
 
   if (!question) return (
     <div className="bg-gray-800 min-h-screen">
@@ -46,6 +68,53 @@ function QuestionDetails() {
             </li>
           ))}
         </ul>
+
+        {/* CODE EDITOR AND RUNNER */}
+        <div className="mt-8">
+          <h3 className="text-lg font-semibold mb-2">Write Your Code</h3>
+          <div className="bg-gray-800 rounded p-2">
+            <Editor
+              value={code}
+              onValueChange={setCode}
+              highlight={code => highlight(code, languages.javascript)}
+              padding={10}
+              style={{
+                fontFamily: '"Fira Code", monospace',
+                fontSize: 14,
+                backgroundColor: '#1a202c',
+                color: 'white',
+                minHeight: 100,
+                width: '100%',
+                overflow: 'auto',
+                resize: 'vertical',
+              }}
+            />
+          </div>
+          <div className="mt-4">
+            <label className="block mb-1 font-medium text-gray-300">Custom Input (stdin):</label>
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Enter your input here (used as stdin)"
+              className="w-full p-2 rounded bg-gray-100 border border-gray-300 text-black"
+              rows={4}
+            />
+          </div>
+          <button
+            onClick={handleRun}
+            className="mt-4 bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-white"
+          >
+            Run Code
+          </button>
+        </div>
+
+        {/* OUTPUT DISPLAY */}
+        {output && (
+          <div className="bg-gray-800 border border-gray-700 p-4 rounded mt-4">
+            <h4 className="font-semibold mb-2">Output:</h4>
+            <pre className="whitespace-pre-wrap text-sm">{output}</pre>
+          </div>
+        )}
       </div>
     </div>
   );
