@@ -4,6 +4,7 @@ import axios from 'axios';
 import Editor from 'react-simple-code-editor';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-javascript';
+import 'prismjs/themes/prism-tomorrow.css'; // Add this line for VS Code-like dark theme
 import { handleError } from '../utils';
 import { ToastContainer } from 'react-toastify';
 
