@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Editor from 'react-simple-code-editor';
-import { highlight, languages } from 'prismjs/components/prism-core';
-import 'prismjs/components/prism-javascript'; // Add language support as needed
+import Prism from 'prismjs';
+import 'prismjs/components/prism-javascript';
+import { handleError } from '../utils';
+import { ToastContainer } from 'react-toastify';
 
 function QuestionDetails() {
   const { qid } = useParams();
@@ -26,15 +28,17 @@ function QuestionDetails() {
     fetchQuestion();
   }, [qid]);
 
-  // const handleRun = async () => {
-  //   // Placeholder: Implement code execution logic here
-  //   setOutput('Code execution result will appear here.');
-  // };
-
   const handleRun = async () => {
-    const payload = { language: 'cpp', code , input };
+    const token = localStorage.getItem('token');
+    if (!token) {
+      handleError("Login to test code");
+      return;
+    }
     try {
-      const { data } = await axios.post('http://localhost:8080/run', payload);
+      const payload = { language: 'cpp', code, input };
+      const { data } = await axios.post('http://localhost:8080/run', payload, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setOutput(data.output);
     } catch (error) {
       console.error(error);
@@ -76,7 +80,7 @@ function QuestionDetails() {
             <Editor
               value={code}
               onValueChange={setCode}
-              highlight={code => highlight(code, languages.javascript)}
+              highlight={code => Prism.highlight(code, Prism.languages.javascript, 'javascript')}
               padding={10}
               style={{
                 fontFamily: '"Fira Code", monospace',
@@ -116,6 +120,7 @@ function QuestionDetails() {
           </div>
         )}
       </div>
+        <ToastContainer/>
     </div>
   );
 }
