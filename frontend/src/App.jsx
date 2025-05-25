@@ -7,6 +7,9 @@ import Report from './pages/remove'
 import Login from './pages/login'
 import Register from './pages/register'
 import Problemset from './pages/problemset'
+import Sidebar from './components/Sidebar'
+// import List from './pages/problemset'
+import QuestionDetails from './pages/QuestionDetails'
 
 function Home() {
   return (
@@ -21,6 +24,7 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
+      <Sidebar />
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -29,6 +33,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/problemset" element={<Problemset />} />
+          <Route path="/question/:qid" element={<QuestionDetails />} />
         </Routes>
       </main>
       <Footer />

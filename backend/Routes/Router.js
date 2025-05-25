@@ -1,4 +1,4 @@
-const { signup, login, addQues, getQues, deleteQues, updateQues } = require('../Controllers/Controller');
+const { signup, login, addQues, getQues, deleteQues, updateQues, getAllQues } = require('../Controllers/Controller');
 const { signupValidation, loginValidation, addQuestionValidation } = require('../Middlewares/Validation');
 
 const router = require('express').Router();
@@ -15,7 +15,10 @@ router.delete('/deleteQues/:quesId', deleteQues);
 
 router.put('/updateQues/:quesId', updateQues);
 
+router.get('/getAllQues', getAllQues);
+
 // router.post('/run', executeCode);
+
 
 
 module.exports = router;

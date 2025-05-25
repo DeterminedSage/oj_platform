@@ -1,270 +1,126 @@
-// import React, { useState } from 'react';
-// import { ToastContainer, toast } from 'react-toastify';
-// import { handleError, handleSuccess } from '../utils';
-// import 'react-toastify/dist/ReactToastify.css';
-
-// const ViewQuestion = () => {
-//   const token = localStorage.getItem('token');
-
-//   const [searchType, setSearchType] = useState('id');
-//   const [searchValue, setSearchValue] = useState('');
-//   const [question, setQuestion] = useState(null);
-
-//   if (!token) return null;
-
-//   const handleSearch = async (e) => {
-//     e.preventDefault();
-
-//     const url = `http://localhost:8080/enquiry/getQues?${searchType}=${encodeURIComponent(searchValue)}`;
-//     try {
-//       const response = await fetch(url, {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       });
-
-//       const result = await response.json();
-
-//       if (!result.success) {
-//         handleError(result.message || 'Question not found.');
-//         setQuestion(null);
-//       } else {
-//         setQuestion(result.question);
-//         handleSuccess('Question fetched successfully.');
-//       }
-//     } catch (err) {
-//       console.error(err);
-//       handleError('Error fetching question.');
-//     }
-//   };
-
-//   return (
-//     <div className="max-w-2xl mx-auto mt-10 p-6 border rounded-lg shadow-md bg-gray-900 text-white">
-//       <h2 className="text-xl font-semibold mb-4">View Question Details</h2>
-
-//       <form onSubmit={handleSearch} className="space-y-4">
-//         <div>
-//           <label className="block mb-1">Search Question By</label>
-//           <select
-//             value={searchType}
-//             onChange={(e) => {
-//               setSearchType(e.target.value);
-//               setSearchValue('');
-//               setQuestion(null);
-//             }}
-//             className="w-full bg-gray-800 border border-gray-700 px-3 py-2 rounded text-white"
-//           >
-//             <option value="id">Ques ID</option>
-//             <option value="qtitle">Ques Title</option>
-//           </select>
-//         </div>
-
-//         <div>
-//           <label className="block mb-1">
-//             Enter {searchType === 'id' ? 'Question ID' : 'Question Title'}
-//           </label>
-//           <input
-//             type="text"
-//             value={searchValue}
-//             onChange={(e) => setSearchValue(e.target.value)}
-//             className="w-full bg-gray-800 border border-gray-700 px-3 py-2 rounded text-white"
-//             required
-//           />
-//         </div>
-
-//         <button type="submit" className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white">
-//           Search
-//         </button>
-//       </form>
-
-//       {question && (
-//         <div className="mt-8 space-y-4">
-//           <h3 className="text-lg font-semibold">Question Details</h3>
-
-//           <div>
-//             <p className="font-medium">Title:</p>
-//             <p className="bg-gray-800 border border-gray-700 px-3 py-2 rounded">{question.title}</p>
-//           </div>
-
-//           <div>
-//             <p className="font-medium">Description:</p>
-//             <p className="bg-gray-800 border border-gray-700 px-3 py-2 rounded whitespace-pre-line">
-//               {question.description}
-//             </p>
-//           </div>
-
-//           <div>
-//             <p className="font-medium">Difficulty:</p>
-//             <p className="bg-gray-800 border border-gray-700 px-3 py-2 rounded capitalize">{question.difficulty}</p>
-//           </div>
-//         </div>
-//       )}
-
-//       <ToastContainer />
-//     </div>
-//   );
-// };
-
-// export default ViewQuestion;
-
-import React, { useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import { handleError, handleSuccess } from '../utils';
-import 'react-toastify/dist/ReactToastify.css';
-import Editor from 'react-simple-code-editor';
-import { highlight, languages } from 'prismjs/components/prism-core';
-import 'prismjs/components/prism-clike';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/themes/prism.css';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const ViewQuestion = () => {
-  const token = localStorage.getItem('token');
+function Problemset() {
+  const [questions, setQuestions] = useState([]);
+  const [page, setPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const questionsPerPage = 10;
 
-  const [searchType, setSearchType] = useState('id');
-  const [searchValue, setSearchValue] = useState('');
-  const [question, setQuestion] = useState(null);
-  const [input, setInput] = useState("");
-
-
-  const [code, setCode] = useState(`#include <iostream>\n\nint main() {\n  std::cout << "Hello World!";\n  return 0;\n}`);
-  const [output, setOutput] = useState('');
-
-  if (!token) return null;
-
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    const url = `http://localhost:8080/enquiry/getQues?${searchType}=${encodeURIComponent(searchValue)}`;
-    try {
-      const response = await fetch(url, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const result = await response.json();
-      if (!result.success) {
-        handleError(result.message || 'Question not found.');
-        setQuestion(null);
-      } else {
-        setQuestion(result.question);
-        handleSuccess('Question fetched successfully.');
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const res = await axios.get('http://localhost:8080/enquiry/getAllQues');
+        setQuestions(res.data);
+      } catch (err) {
+        console.error('Failed to fetch questions:', err);
       }
-    } catch (err) {
-      console.error(err);
-      handleError('Error fetching question.');
-    }
-  };
+    };
+    fetchQuestions();
+  }, []);
 
-  const handleRun = async () => {
-    const payload = { language: 'cpp', code , input };
-    try {
-      const { data } = await axios.post('http://localhost:8080/run', payload);
-      setOutput(data.output);
-    } catch (error) {
-      console.error(error);
-      setOutput('Error executing code.');
-    }
-  };
+  const filteredQuestions = questions.filter((q) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      q.title.toLowerCase().includes(term) ||
+      q.qid.toString().toLowerCase().includes(term)
+    );
+  });
+
+  const totalPages = Math.ceil(filteredQuestions.length / questionsPerPage);
+  const currentQuestions = filteredQuestions.slice(
+    (page - 1) * questionsPerPage,
+    page * questionsPerPage
+  );
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-6 border rounded-lg shadow-md bg-gray-900 text-white">
-      <h2 className="text-xl font-semibold mb-4">View Question Details</h2>
+    <div className="p-6 pl-12">
+      <h1 className="text-2xl font-bold mb-4">Questions List</h1>
 
-      <form onSubmit={handleSearch} className="space-y-4">
-        <div>
-          <label className="block mb-1">Search Question By</label>
-          <select
-            value={searchType}
-            onChange={(e) => {
-              setSearchType(e.target.value);
-              setSearchValue('');
-              setQuestion(null);
-            }}
-            className="w-full bg-gray-800 border border-gray-700 px-3 py-2 rounded text-white"
-          >
-            <option value="id">Ques ID</option>
-            <option value="qtitle">Ques Title</option>
-          </select>
-        </div>
+      {/* Search Bar */}
+      <input
+        type="text"
+        placeholder="Search by QID or Title..."
+        value={searchTerm}
+        onChange={(e) => {
+          setSearchTerm(e.target.value);
+          setPage(1); // Reset to page 1 on search
+        }}
+        className="mb-4 px-4 py-2 w-96 border border-gray-500 rounded bg-gray-800 text-white placeholder-gray-400"
+      />
 
-        <div>
-          <label className="block mb-1">
-            Enter {searchType === 'id' ? 'Question ID' : 'Question Title'}
-          </label>
-          <input
-            type="text"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            className="w-full bg-gray-800 border border-gray-700 px-3 py-2 rounded text-white"
-            required
-          />
-        </div>
-
-        <button type="submit" className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white">
-          Search
-        </button>
-      </form>
-
-      {question && (
-        <div className="mt-8 space-y-6">
-          <div>
-            <h3 className="text-lg font-semibold">Question Details</h3>
-            <p className="font-medium mt-2">Title:</p>
-            <p className="bg-gray-800 border border-gray-700 px-3 py-2 rounded">{question.title}</p>
-            <p className="font-medium mt-2">Description:</p>
-            <p className="bg-gray-800 border border-gray-700 px-3 py-2 rounded whitespace-pre-line">{question.description}</p>
-            <p className="font-medium mt-2">Difficulty:</p>
-            <p className="bg-gray-800 border border-gray-700 px-3 py-2 rounded capitalize">{question.difficulty}</p>
-          </div>
-
-          {/* CODE EDITOR */}
-          <div>
-            <h3 className="text-lg font-semibold mb-2">Write Your Code</h3>
-            <div className="bg-gray-800 rounded p-2" style={{ height: '300px', overflowY: 'auto' }}>
-              <Editor
-                value={code}
-                onValueChange={setCode}
-                highlight={(code) => highlight(code, languages.js)}
-                padding={10}
-                style={{
-                  fontFamily: '"Fira Code", monospace',
-                  fontSize: 14,
-                  backgroundColor: '#1a202c',
-                  color: 'white',
-                  height: '100%',
-                }}
-              />
-            </div>
-            <div className="mt-4">
-              <label className="block mb-1 font-medium text-gray-300">Custom Input (stdin):</label>
-              <textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Enter your input here (used as stdin)"
-                className="w-full p-2 rounded bg-gray-100 border border-gray-300 text-black"
-                rows={4}
-              />
-            </div>
-            <button
-              onClick={handleRun}
-              className="mt-4 bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-white"
-            >
-              Run Code
-            </button>
-          </div>
-
-          {/* OUTPUT DISPLAY */}
-          {output && (
-            <div className="bg-gray-800 border border-gray-700 p-4 rounded mt-4">
-              <h4 className="font-semibold mb-2">Output:</h4>
-              <pre className="whitespace-pre-wrap text-sm">{output}</pre>
-            </div>
+      {/* Questions Table */}
+      <table className="min-w-full table-auto border border-gray-800 bg-gray-900 text-gray-100">
+        <thead>
+          <tr className="bg-gray-800">
+            <th className="px-4 py-2 border border-gray-800 text-gray-100">QID</th>
+            <th className="px-4 py-2 border border-gray-800 text-gray-100">Title</th>
+            <th className="px-4 py-2 border border-gray-800 text-gray-100">Difficulty</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentQuestions.length > 0 ? (
+            currentQuestions.map((q, idx) => (
+              <tr
+                key={q.qid}
+                className={idx % 2 === 0 ? "bg-gray-900 text-gray-100 text-center" : "bg-gray-700 text-gray-100 text-center"}
+              >
+                <td className="px-4 py-2 border border-gray-800">{q.qid}</td>
+                <td className="px-4 py-2 border border-gray-800">
+                  <Link
+                    to={`/question/${q.qid}`}
+                    className="text-blue-400 hover:underline hover:text-blue-300"
+                  >
+                    {q.title}
+                  </Link>
+                </td>
+                <td className={`px-4 py-2 border border-gray-800 capitalize ${
+                  q.difficulty === 'easy'
+                    ? 'text-green-400'
+                    : q.difficulty === 'medium'
+                    ? 'text-yellow-400'
+                    : q.difficulty === 'hard'
+                    ? 'text-red-400'
+                    : ''
+                }`}>
+                  {q.difficulty}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="3" className="text-center py-4 text-gray-400">
+                No questions found.
+              </td>
+            </tr>
           )}
+        </tbody>
+      </table>
+
+      {/* Pagination */}
+      {filteredQuestions.length > 0 && (
+        <div className="mt-4 flex justify-center gap-2">
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            Prev
+          </button>
+          <span className="px-3 py-1">{page} / {totalPages}</span>
+          <button
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className="px-3 py-1 border rounded disabled:opacity-50"
+          >
+            Next
+          </button>
         </div>
       )}
-
-      <ToastContainer />
     </div>
   );
-};
+}
 
-export default ViewQuestion;
+export default Problemset;
 
