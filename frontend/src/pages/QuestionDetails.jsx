@@ -14,6 +14,7 @@ function QuestionDetails() {
   const [code, setCode] = useState('');
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
+  const [submissionResult, setSubmissionResult] = useState(null);
 
   useEffect(() => {
     const fetchQuestion = async () => {
@@ -44,6 +45,31 @@ function QuestionDetails() {
     } catch (error) {
       console.error(error);
       setOutput('Error executing code.');
+    }
+  };
+
+  const handleSubmit = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      handleError("Login to test code");
+      return;
+    }
+
+    try {
+      const payload = {
+        language: 'cpp',
+        code,
+        qid: question.qid
+      };
+
+      const { data } = await axios.post("http://localhost:8080/submit", payload, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      setSubmissionResult(data.results); // save test case results
+    } catch (error) {
+      console.error(error);
+      setSubmissionResult(null);
     }
   };
 
@@ -107,9 +133,15 @@ function QuestionDetails() {
           </div>
           <button
             onClick={handleRun}
-            className="mt-4 bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-white"
+            className="mt-4 bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-white mr-2"
           >
             Run Code
+          </button>
+          <button
+            onClick={handleSubmit}
+            className="mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white"
+          >
+            Submit
           </button>
         </div>
 
@@ -120,6 +152,68 @@ function QuestionDetails() {
             <pre className="whitespace-pre-wrap text-sm">{output}</pre>
           </div>
         )}
+
+        {/* SUBMISSION RESULTS */}
+        {/* {submissionResult && (
+            <div className="mt-6 bg-gray-900 p-4 rounded border border-gray-700 text-gray-100">
+              <h3 className="text-xl font-semibold mb-3">
+                {submissionResult.every(r => r.passed)
+                  ? '✅ All Test Cases Passed!'
+                  : `❌ Failed at Test Case ${submissionResult.findIndex(r => !r.passed) + 1}`}
+              </h3>
+              <div className="space-y-4">
+                {submissionResult.map((res, idx) => (
+                  <div key={idx} className="p-3 bg-gray-800 border border-gray-700 rounded">
+                    <p><strong>Test Case #{res.testCase}</strong></p>
+                    <p><strong>Input:</strong> {res.input}</p>
+                    <p><strong>Expected Output:</strong> {res.expected}</p>
+                    <p><strong>Received Output:</strong> {res.received}</p>
+                    <p>
+                      <strong>Status:</strong>{' '}
+                      <span className={res.passed ? "text-green-400" : "text-red-400"}>
+                        {res.passed ? 'Passed' : 'Failed'}
+                      </span>
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )} */}
+
+
+          {submissionResult && (
+  <div className="mt-6 bg-gray-900 p-4 rounded border border-gray-700 text-gray-100">
+    <h3 className="text-xl font-semibold mb-3">
+      {submissionResult.every(r => r.passed)
+        ? '✅ All Test Cases Passed!'
+        : `❌ Failed at Test Case ${submissionResult.findIndex(r => !r.passed) + 1}`}
+    </h3>
+    <div className="space-y-4">
+      {submissionResult.map((res, idx) => (
+        <div key={idx} className="p-3 bg-gray-800 border border-gray-700 rounded">
+          <p><strong>Test Case #{res.testCase}</strong></p>
+          <p><strong>Input:</strong></p>
+          <pre className="bg-gray-700 p-2 rounded text-sm whitespace-pre-wrap">{res.input}</pre>
+          
+          <p><strong>Expected Output:</strong></p>
+          <pre className="bg-gray-700 p-2 rounded text-sm whitespace-pre-wrap">{res.expected}</pre>
+          
+          <p><strong>Received Output:</strong></p>
+          <pre className="bg-gray-700 p-2 rounded text-sm whitespace-pre-wrap">{res.received}</pre>
+
+          <p>
+            <strong>Status:</strong>{' '}
+            <span className={res.passed ? "text-green-400" : "text-red-400"}>
+              {res.passed ? 'Passed' : 'Failed'}
+            </span>
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+
+
       </div>
         <ToastContainer/>
     </div>
