@@ -7,8 +7,8 @@ const questionSchema = new Schema({
     required: true,
     unique: true
   },
-  title: { 
-    type: String, 
+  title: {
+    type: String,
     required: true,
     unique: true
   },
