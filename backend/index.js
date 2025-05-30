@@ -11,6 +11,7 @@ const { executeCpp } = require('./executeCpp');
 const fs = require('fs');
 const path = require('path');
 const QuesModel = require('./Models/Question');
+const { aiCodeReview } = require('./aiCodeReview');
 
 DBConnection();
 
@@ -138,6 +139,19 @@ app.post("/submit", async (req, res) => {
     console.error("Submission error:", error);
     res.status(500).json({ success: false, error: error.message || "Internal error" });
   }
+});
+
+app.post("/ai-review", async (req, res) => {
+    const { code } = req.body;
+    if (code === undefined) {
+        return res.status(404).json({ success: false, error: "Empty code!" });
+    }
+    try {
+        const review = await aiCodeReview(code);
+        res.json({ "review": review });
+    } catch (error) {
+        res.status(500).json({ error: "Error in AI review, error: " + error.message });
+    }
 });
 
 
