@@ -36,7 +36,7 @@ const Report = () => {
         setQuestion(null);
       } else {
         setQuestion(result.question); 
-        handleSuccess("Question founderation");
+        handleSuccess("Question fetched successfully.");
       }
     } catch (err) {
       console.error(err);

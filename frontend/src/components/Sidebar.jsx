@@ -9,6 +9,7 @@ function Sidebar() {
 
   const links = [
     { path: '/', label: 'Home' },
+    { path: '/profile', label: 'Profile' },
     { path: '/problemset', label: 'Problemset' },
     { path: '/contribute', label: 'Contribute' },
     { path: '/report', label: 'Report' },
