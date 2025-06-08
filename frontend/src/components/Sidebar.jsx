@@ -16,7 +16,7 @@ function Sidebar() {
   ];
 
   return (
-    <div className="group fixed top-0 left-0 z-40 h-full flex items-start">
+    <div className="group fixed top-0 left-0 z-50 h-full flex items-start">
       
       {/* Arrow Icon - Always visible */}
       <div
@@ -35,7 +35,7 @@ function Sidebar() {
       </div>
 
       {/* Sidebar - Appears only on hover */}
-      <aside className="h-full w-0 overflow-hidden group-hover:w-32 transition-all duration-300">
+      <aside className="h-full w-0 overflow-hidden group-hover:w-32 transition-all duration-300 z-50">
         <div className="h-full bg-white dark:bg-gray-900 border-r dark:border-gray-700 p-4 w-32">
           {/* <h2 className="text-lg font-semibold text-gray-700 dark:text-white mb-4">Navigation</h2> */}
           <ul className="space-y-2">
