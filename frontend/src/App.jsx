@@ -43,8 +43,9 @@ function Home() {
 function App() {
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+            <Navbar />
       <Sidebar />
+      {/* <Navbar /> */}
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
