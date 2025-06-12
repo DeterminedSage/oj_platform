@@ -84,7 +84,7 @@ const login = async (req, res) => {
         const jwtToken = jwt.sign(
             {email: user.email,_id:user._id},
             process.env.JWT_SECRET,
-            {expiresIn: "1h"}
+            {expiresIn: "3h"}
         )
 
         res.status(200).json({
@@ -103,86 +103,43 @@ const login = async (req, res) => {
 }
 
 
-const getQues = async (req, res) => {
+    const getQues = async (req, res) => {
 
-  console.log(req.query);
-  const { id, qtitle } = req.query;
+      console.log(req.query);
+      const { id, qtitle } = req.query;
 
-  try {
-    let question;
-    if (id) {
-            console.log("Querying by ID:", id);
-      const x = +id;
-      console.log(id);
-      question = await QuesModel.findOne({ qid: x });
-    } else if (qtitle) {
-            console.log("Querying by Title:", qtitle);
-      question = await QuesModel.findOne({ title: qtitle });
+      try {
+        let question;
+        if (id) {
+          const x = +id;
+          question = await QuesModel.findOne({ qid: x });
+        } else if (qtitle) {
+          question = await QuesModel.findOne({ title: qtitle });
 
-    }
-
-    if (!question) {
-      return res.status(404).json({ 
-        success: false, 
-        question: null
-      });
-    }
-
-    question.testCases = question.testCases.slice(0, 2);
-
-    return res.status(200).json({ 
-      success: true, 
-      message: "Question found",
-      question
-    });
-
-  } catch (error) {
-    return res.status(500).json({ 
-      success: false, 
-      question: null
-    });
-  }
-}
-
-// const deleteQues = async (req, res) => {
-    
-// }
-
-    const deletedQues = async (req, res) => {
-        const { quesId } = req.params;
-        console.log("quesId:", quesId);
-
-    if (!quesId) {
-        return res.status(400).json({
-        success: false,
-        message: 'Question ID (quesId) is required',
-        });
-    }
-
-    try {
-        //const result = await Question.deleteOne({ qid: quesId });
-        // const x = +quesId;
-        const result = await QuesModel.deleteOne({ qid: Number(quesId) });
-
-        if (result.deletedCount === 0) {
-        return res.status(404).json({
-            success: false,
-            message: 'Question not found or already deleted',
-        });
         }
 
-        res.status(200).json({
-        success: true,
-        message: 'Question deleted successfully',
+        if (!question) {
+          return res.status(404).json({ 
+            success: false, 
+            question: null
+          });
+        }
+
+        question.testCases = question.testCases.slice(0, 2);
+
+        return res.status(200).json({ 
+          success: true, 
+          message: "Question found",
+          question
         });
-    } catch (error) {
-        res.status(500).json({
-        success: false,
-        message: 'Server error',
-        error: error.message,
+
+      } catch (error) {
+        return res.status(500).json({ 
+          success: false, 
+          question: null
         });
+      }
     }
-    };
 
     const deleteQues = async (req, res) => {
         const { quesId } = req.params;
@@ -196,8 +153,7 @@ const getQues = async (req, res) => {
     }
 
     try {
-        //const result = await Question.deleteOne({ qid: quesId });
-        // const x = +quesId;
+
         const result = await QuesModel.deleteOne({ qid: Number(quesId) });
 
         if (result.deletedCount === 0) {
@@ -271,6 +227,25 @@ const getQues = async (req, res) => {
       }
     };
 
+const getUser = async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user._id).select(
+      'name email questionsSolvedEasy questionsSolvedHard questionsSolvedMedium questionsSolvedTotal'
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+
 
 module.exports = {
     signup,
@@ -280,4 +255,5 @@ module.exports = {
     deleteQues,
     updateQues,
     getAllQues,
+    getUser,
 }

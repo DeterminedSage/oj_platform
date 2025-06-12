@@ -1,5 +1,5 @@
-const { signup, login, addQues, getQues, deleteQues, updateQues, getAllQues } = require('../Controllers/Controller');
-const { signupValidation, loginValidation, addQuestionValidation } = require('../Middlewares/Validation');
+const { signup, login, addQues, getQues, deleteQues, updateQues, getAllQues, getUser } = require('../Controllers/Controller');
+const { signupValidation, loginValidation, addQuestionValidation, authMiddleware } = require('../Middlewares/Validation');
 
 const router = require('express').Router();
 
@@ -17,8 +17,8 @@ router.put('/updateQues/:quesId', updateQues);
 
 router.get('/getAllQues', getAllQues);
 
-// router.post('/run', executeCode);
+router.get('/getQues', getQues);
 
-
+router.get('/profile', authMiddleware , getUser);
 
 module.exports = router;

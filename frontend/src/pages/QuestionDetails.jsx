@@ -7,6 +7,7 @@ import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism-tomorrow.css';
 import { handleError } from '../utils';
 import { ToastContainer } from 'react-toastify';
+import ReactMarkdown from 'react-markdown';
 
 function QuestionDetails() {
   const { qid } = useParams();
@@ -39,7 +40,7 @@ function QuestionDetails() {
     try {
       const payload = { language: 'cpp', code, input };
       const { data } = await axios.post('http://localhost:8080/run', payload, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` } // Fixed string interpolation
       });
       setOutput(data.output);
     } catch (error) {
@@ -63,7 +64,7 @@ function QuestionDetails() {
       };
 
       const { data } = await axios.post("http://localhost:8080/submit", payload, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` } // Fixed string interpolation
       });
 
       setSubmissionResult(data.results);
@@ -72,10 +73,6 @@ function QuestionDetails() {
       setSubmissionResult(null);
     }
   };
-
-  // const handleAiOverview = () => {
-  //   alert("✅ AI Overview triggered for accepted solution!"); // Replace with real logic
-  // };
 
   const handleAiReview = async () => {
     const payload = {
@@ -90,7 +87,7 @@ function QuestionDetails() {
     };
   };
 
-  const isAccepted = submissionResult && submissionResult.every(r => r.passed); // ⭐
+  const isAccepted = submissionResult && submissionResult.every(r => r.passed);
 
   if (!question) return (
     <div className="bg-gray-800 min-h-screen">
@@ -99,117 +96,123 @@ function QuestionDetails() {
   );
 
   return (
-    <div className="bg-gray-800 min-h-screen">
-      <div className="p-6 pl-16 text-gray-100">
-        <h1 className="text-3xl font-bold mb-2">{question.title}</h1>
-        <p className="text-gray-400 mb-4">QID: {question.qid} | Difficulty: <span className={`capitalize ${
+    <div className="bg-gray-800 min-h-screen text-gray-100 p-4">
+  <div className="flex h-[90vh] gap-4">
+
+    {/* LEFT COLUMN */}
+    <div className="w-1/2 bg-gray-900 p-4 rounded overflow-y-auto">
+      <h1 className="text-2xl font-bold mb-2">{question.title}</h1>
+      <p className="text-sm text-gray-400 mb-4">
+        QID: {question.qid} | Difficulty: 
+        <span className={`ml-2 capitalize ${
           question.difficulty === 'easy' ? 'text-green-400' :
           question.difficulty === 'medium' ? 'text-yellow-400' :
           'text-red-400'
-        }`}>{question.difficulty}</span></p>
-        <p className="mb-6">{question.description}</p>
+        }`}>{question.difficulty}</span>
+      </p>
+      <div style={{ whiteSpace: 'pre-line' }}>{question.description}</div>
 
-        <h2 className="text-xl font-semibold mb-2">Test Cases:</h2>
-        <ul className="list-disc pl-6 space-y-2">
-          {question.testCases.map((tc, idx) => (
-            <li key={idx}>
-              <strong>Input:</strong> {tc.input} <br />
-              <strong>Output:</strong> {tc.output}
-            </li>
-          ))}
-        </ul>
+      <h2 className="text-lg font-semibold mt-4 mb-2">Test Cases:</h2>
+      <ul className="list-disc pl-6 space-y-3">
+        {question.testCases.map((tc, idx) => (
+          <li key={idx}>
+            <strong>Input:</strong>
+            <div className="whitespace-pre-line">{tc.input}</div>
+            <strong>Output:</strong>
+            <div className="whitespace-pre-line">{tc.output}</div>
+          </li>
+        ))}
+      </ul>
+    </div>
 
-        {/* CODE EDITOR AND RUNNER */}
-        <div className="mt-8">
-          <h3 className="text-lg font-semibold mb-2">Write Your Code</h3>
-          <div className="bg-gray-800 rounded p-2">
-            <Editor
-              value={code}
-              onValueChange={setCode}
-              highlight={code =>
-                Prism.highlight(code, Prism.languages.javascript, 'javascript')
-              }
-              padding={12}
-              style={{
-                fontFamily: '"Fira Code", monospace',
-                fontSize: 14,
-                backgroundColor: '#1a202c',
-                color: '#f8f8f2',
-                lineHeight: 1.5,
-                minHeight: 120,
-                width: '100%',
-                overflowX: 'auto',
-                whiteSpace: 'pre',
-                borderRadius: 6,
-                resize: 'vertical',
-              }}
+    {/* RIGHT COLUMN */}
+    <div className="w-1/2 flex flex-col">
+
+      {/* TOP: EDITOR AREA */}
+      <div className="flex-1 bg-gray-900 p-2 rounded border border-gray-700 overflow-auto mb-2">
+        <Editor
+          value={code}
+          onValueChange={setCode}
+          highlight={code =>
+            Prism.highlight(code, Prism.languages.javascript, 'javascript')
+          }
+          padding={12}
+          style={{
+            fontFamily: '"Fira Code", monospace',
+            fontSize: 14,
+            backgroundColor: '#1a202c',
+            color: '#f8f8f2',
+            lineHeight: 1.5,
+            width: '100%',
+            minHeight: '100%',
+            whiteSpace: 'pre',
+            borderRadius: 6,
+            overflow: 'auto',
+            maxHeight: '300px',
+          }}
+        />
+      </div>
+
+      {/* BOTTOM: ACTIONS + I/O + AI REVIEW */}
+      <div className="flex-1 bg-gray-900 p-4 rounded border border-gray-700 overflow-auto">
+
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <label className="block mb-1 font-medium text-gray-300">Custom Input (stdin):</label>
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Enter your input here (used as stdin)"
+              className="w-full p-2 rounded bg-gray-100 border border-gray-300 text-black"
+              rows={4}
             />
           </div>
-
-          {/* INPUT & OUTPUT side-by-side */}
-          <div className="mt-4 grid grid-cols-2 gap-4"> {/* ⭐ Two-column layout */}
-            <div>
-              <label className="block mb-1 font-medium text-gray-300">Custom Input (stdin):</label>
-              <textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Enter your input here (used as stdin)"
-                className="w-full p-2 rounded bg-gray-100 border border-gray-300 text-black"
-                rows={4}
-              />
+          <div>
+            <label className="block mb-1 font-medium text-gray-300">Output:</label>
+            <div className="bg-gray-900 text-white p-2 rounded border border-gray-600 h-[88px] overflow-auto text-sm whitespace-pre-wrap">
+              {output || 'Output will appear here...'}
             </div>
-
-            <div>
-              <label className="block mb-1 font-medium text-gray-300">Output:</label>
-              <div className="bg-gray-900 text-white p-2 rounded border border-gray-600 h-[88px] overflow-auto text-sm whitespace-pre-wrap">
-                {output || 'Output will appear here...'}
-              </div>
-            </div>
-          </div>
-
-          {/* {aiReview && (
-  <div className="mt-4 bg-gray-900 p-4 rounded border border-purple-700 text-purple-100">
-    <h3 className="text-lg font-semibold mb-2">🧠 AI Review</h3>
-    <p className="whitespace-pre-wrap">{aiReview}</p>
-  </div>
-)} */}
-
-          {/* Buttons */}
-          <div className="mt-4 flex gap-4">
-            <button
-              onClick={handleRun}
-              className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-white"
-            >
-              Run Code
-            </button>
-            <button
-              onClick={handleSubmit}
-              className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white"
-            >
-              Submit
-            </button>
-            <button
-              onClick={handleAiReview}
-              disabled={!isAccepted} // ⭐
-              className={`px-4 py-2 rounded text-white ${
-                isAccepted ? 'bg-purple-600 hover:bg-purple-700' : 'bg-gray-600 cursor-not-allowed'
-              }`}
-            >
-              AI Overview
-            </button>
           </div>
         </div>
 
-                  {aiReview && (
-  <div className="mt-4 bg-gray-900 p-4 rounded border border-purple-700 text-purple-100">
-    <h3 className="text-lg font-semibold mb-2">🧠 AI Review</h3>
-    <p className="whitespace-pre-wrap">{aiReview}</p>
-  </div>
-)}
+        <div className="flex gap-4 mb-4">
+          <button onClick={handleRun} className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-white">
+            Run Code
+          </button>
+          <button onClick={handleSubmit} className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white">
+            Submit
+          </button>
+          <button
+            onClick={handleAiReview}
+            disabled={!isAccepted}
+            className={`px-4 py-2 rounded text-white ${
+              isAccepted ? 'bg-purple-600 hover:bg-purple-700' : 'bg-gray-600 cursor-not-allowed'
+            }`}
+          >
+            Jiraiya's Overview
+          </button>
+        </div>
 
-        {/* SUBMISSION RESULTS */}
+        {/* AI REVIEW + SUBMISSION RESULT */}
+        {aiReview && (
+          <div className="mb-4 bg-gray-800 p-3 rounded border border-purple-700 text-purple-100 max-h-[200px] overflow-y-auto">
+            <h3 className="text-lg font-semibold mb-2">Jiraiya's overview</h3>
+            {/* <ReactMarkdown className="prose prose-invert">{aiReview}</ReactMarkdown> */}
+            <ReactMarkdown
+              components={{
+                p: ({node, ...props}) => <p className="prose prose-invert mb-2" {...props} />,
+                h1: ({node, ...props}) => <h1 className="text-xl font-bold mb-2" {...props} />,
+                pre: ({node, ...props}) => <pre className="bg-gray-900 p-2 rounded" {...props} />,
+                code: ({node, ...props}) => <code className="bg-gray-800 text-sm px-1 py-0.5 rounded" {...props} />
+              }}
+            >
+              {aiReview}
+            </ReactMarkdown>
+          </div>
+        )}
+
         {submissionResult && (
-          <div className="mt-6 bg-gray-900 p-4 rounded border border-gray-700 text-gray-100">
+          <div className="bg-gray-800 p-4 rounded border border-gray-700 text-gray-100 max-h-[250px] overflow-y-auto">
             <h3 className="text-xl font-semibold mb-3">
               {submissionResult.every(r => r.passed)
                 ? '✅ All Test Cases Passed!'
@@ -217,17 +220,16 @@ function QuestionDetails() {
             </h3>
             <div className="space-y-4">
               {submissionResult.map((res, idx) => (
-                <div key={idx} className="p-3 bg-gray-800 border border-gray-700 rounded">
+                <div key={idx} className="p-3 bg-gray-900 border border-gray-700 rounded">
                   <p><strong>Test Case #{res.testCase}</strong></p>
                   <p><strong>Input:</strong></p>
-                  <pre className="bg-gray-700 p-2 rounded text-sm whitespace-pre-wrap">{res.input}</pre>
-
+                  <pre className="bg-gray-800 p-2 rounded text-sm whitespace-pre-wrap">{res.input}</pre>
+                  <br/> {/* Added line gap */}
                   <p><strong>Expected Output:</strong></p>
-                  <pre className="bg-gray-700 p-2 rounded text-sm whitespace-pre-wrap">{res.expected}</pre>
-
+                  <pre className="bg-gray-800 p-2 rounded text-sm whitespace-pre-wrap">{res.expected}</pre>
+                  <br/> {/* Added line gap */}
                   <p><strong>Received Output:</strong></p>
-                  <pre className="bg-gray-700 p-2 rounded text-sm whitespace-pre-wrap">{res.received}</pre>
-
+                  <pre className="bg-gray-800 p-2 rounded text-sm whitespace-pre-wrap">{res.received}</pre>
                   <p>
                     <strong>Status:</strong>{' '}
                     <span className={res.passed ? "text-green-400" : "text-red-400"}>
@@ -240,19 +242,13 @@ function QuestionDetails() {
           </div>
         )}
       </div>
-      <ToastContainer />
     </div>
+  </div>
+  <ToastContainer />
+</div>
+
   );
 }
 
 export default QuestionDetails;
-
-
-
-
-
-
-
-
-
 

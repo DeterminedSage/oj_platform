@@ -26,8 +26,8 @@ const Contribute = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === 'title' && value.length > 20) return;
-    if (name === 'description' && value.length > 350) return;
+    if (name === 'title' && value.length > 70) return;
+    if (name === 'description' && value.length > 1000) return;
 
     const nextFormData = {
       ...formData,
@@ -62,12 +62,6 @@ const Contribute = () => {
 
     console.log(nextFormData);
   };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.log("Submitted Question:", formData);
-  //   alert("Question submitted successfully!");
-  // };
 
   const handleSubmit = async (e) => {
   e.preventDefault();
@@ -147,7 +141,7 @@ const Contribute = () => {
       </h2>
       <form noValidate onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block font-medium mb-1 text-gray-200">Question Title (max 20 chars)</label>
+          <label className="block font-medium mb-1 text-gray-200">Question Title (max 70 chars)</label>
           <input
             type="text"
             name="title"
@@ -157,12 +151,12 @@ const Contribute = () => {
             required
           />
           <div className="text-sm text-gray-400 mt-1">
-            {formData.title.length}/20
+            {formData.title.length}/70
           </div>
         </div>
 
         <div>
-          <label className="block font-medium mb-1 text-gray-200">Question Description</label>
+          <label className="block font-medium mb-1 text-gray-200">Question Description (max 1000 chars)</label>
           <textarea
             name="description"
             value={formData.description}
@@ -172,7 +166,7 @@ const Contribute = () => {
             required
           />
           <div className="text-sm text-gray-400 mt-1">
-            {formData.description.length}/350
+            {formData.description.length}/1000
           </div>
         </div>
 
