@@ -18,7 +18,7 @@ const Report = () => {
 
     e.preventDefault();
 
-    const url = `http://localhost:8080/enquiry/getQues?${searchType}=${encodeURIComponent(searchValue)}`
+    const url = `http://localhost:8080/crud/getQues?${searchType}=${encodeURIComponent(searchValue)}`
     console.log(url);
     try {
       const response = await fetch(url, {
@@ -45,7 +45,7 @@ const Report = () => {
   };
 
   const handleDelete = async () => {
-    const url = `http://localhost:8080/report/deleteQues/${question.qid}`; // or `id` depending on response
+    const url = `http://localhost:8080/crud/deleteQues/${question.qid}`; // or `id` depending on response
     console.log(question.qid);
     try {
       const response = await fetch(url, {
@@ -70,7 +70,7 @@ const Report = () => {
   };
 
   const handleUpdate = async () => {
-    const url = `http://localhost:8080/report/updateQues/${question.qid}`; // adjust path
+    const url = `http://localhost:8080/crud/updateQues/${question.qid}`; // adjust path
 
     try {
       const response = await fetch(url, {

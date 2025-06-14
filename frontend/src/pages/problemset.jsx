@@ -11,7 +11,7 @@ function Problemset() {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const res = await axios.get('http://localhost:8080/enquiry/getAllQues');
+        const res = await axios.get('http://localhost:8080/crud/getAllQues');
         setQuestions(res.data);
       } catch (err) {
         console.error('Failed to fetch questions:', err);

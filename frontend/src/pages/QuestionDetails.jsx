@@ -19,6 +19,7 @@ function QuestionDetails() {
   const [aiReview, setAiReview] = useState('');
   const [leftWidth, setLeftWidth] = useState('40%'); // Default width for the left column set to 30%
   const [topHeight, setTopHeight] = useState('50%'); // Default height for the top section of the right column
+  const [language, setLanguage] = useState('cpp'); // Default language is C++
 
   const resizerRef = useRef(null);
   const containerRef = useRef(null);
@@ -26,7 +27,7 @@ function QuestionDetails() {
   useEffect(() => {
     const fetchQuestion = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/enquiry/getQues?id=${qid}`);
+        const res = await axios.get(`http://localhost:8080/crud/getQues?id=${qid}`);
         setQuestion(res.data.question);
       } catch (err) {
         console.error("Failed to fetch question:", err);
@@ -43,9 +44,9 @@ function QuestionDetails() {
       return;
     }
     try {
-      const payload = { language: 'cpp', code, input };
-      const { data } = await axios.post('http://localhost:8080/run', payload, {
-        headers: { Authorization: `Bearer ${token}` } // Fixed string interpolation
+      const payload = { language, code, input }; // Use selected language
+      const { data } = await axios.post('http://localhost:8080/code/run', payload, {
+        headers: { Authorization: `Bearer ${token}` }
       });
       setOutput(data.output);
     } catch (error) {
@@ -63,29 +64,32 @@ function QuestionDetails() {
 
     try {
       const payload = {
-        language: 'cpp',
+        language, // Use selected language
         code,
         qid: question.qid
       };
 
-      const { data } = await axios.post("http://localhost:8080/submit", payload, {
-        headers: { Authorization: `Bearer ${token}` } // Fixed string interpolation
+      console.log("Submitting payload:", payload); // Debugging payload
+      const { data } = await axios.post("http://localhost:8080/code/submit", payload, {
+        headers: { Authorization: `Bearer ${token}` }
       });
 
+      console.log("Response from /submit:", data); // Debugging response
       setSubmissionResult(data.results);
     } catch (error) {
-      console.error(error);
+      console.error("Error in /submit API call:", error); // Debugging error
       setSubmissionResult(null);
     }
   };
 
   const handleAiReview = async () => {
     const payload = {
+      language, // Use selected language
       code
     };
 
     try {
-      const { data } = await axios.post('http://localhost:8080/ai-review', payload);
+      const { data } = await axios.post('http://localhost:8080/code/ai-review', payload);
       setAiReview(data.review);
     } catch (error) {
       setAiReview('Error in AI review, error: ' + error.message);
@@ -241,6 +245,15 @@ function QuestionDetails() {
           </div>
 
           <div className="flex gap-4 mb-4">
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="bg-gray-700 text-white px-4 py-2 rounded border border-gray-600"
+            >
+              <option value="cpp">C++</option>
+              <option value="java">Java</option>
+              <option value="python">Python</option>
+            </select>
             <button onClick={handleRun} className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-white">
               Run Code
             </button>

@@ -14,7 +14,7 @@ function Profile() {
 
     const fetchUserData = async () => {
       try {
-        const res = await axios.get('http://localhost:8080/user/profile', {
+        const res = await axios.get('http://localhost:8080/profile/user', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

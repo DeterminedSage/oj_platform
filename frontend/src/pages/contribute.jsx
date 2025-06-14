@@ -93,7 +93,7 @@ const Contribute = () => {
   // console.log("hi");
   try {
     // console.log("backend called");
-    const url = 'http://localhost:8080/contribute/addQues'; // adjust if needed
+    const url = 'http://localhost:8080/crud/addQues'; // adjust if needed
     const token = localStorage.getItem('token');
 
     const response = await fetch(url, {

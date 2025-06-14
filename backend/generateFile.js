@@ -4,21 +4,26 @@ const { v4: uuid } = require('uuid');
 
 const dirCodes = path.join(__dirname, 'codes');
 
-const ensureDirExists = () => {
-    if (!fs.existsSync(dirCodes)) {
-        fs.mkdirSync(dirCodes, { recursive: true });
+const ensureDirExists = (dirPath) => {
+    if (!fs.existsSync(dirPath)) {
+        fs.mkdirSync(dirPath, { recursive: true });
     }
 };
 
 const generateFile = async (format, content) => {
-    ensureDirExists();
     const jobID = uuid();
-    const filename = `${jobID}.${format}`;
-    const filePath = path.join(dirCodes, filename);
+    const jobDir = path.join(dirCodes, jobID);
+    ensureDirExists(jobDir);
+
+    const filename = format === "java" ? "Main.java" : `${jobID}.${format}`;
+    const filePath = path.join(jobDir, filename);
+
     await fs.writeFileSync(filePath, content);
-    return filePath;
+    return { filePath, jobID, jobDir };
 };
 
 module.exports = {
     generateFile,
 };
+
+
