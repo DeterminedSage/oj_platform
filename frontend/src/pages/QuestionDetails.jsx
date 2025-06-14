@@ -8,6 +8,7 @@ import 'prismjs/themes/prism-tomorrow.css';
 import { handleError } from '../utils';
 import { ToastContainer } from 'react-toastify';
 import ReactMarkdown from 'react-markdown';
+const token = localStorage.getItem("token");
 
 function QuestionDetails() {
   const { qid } = useParams();
@@ -89,7 +90,16 @@ function QuestionDetails() {
     };
 
     try {
-      const { data } = await axios.post('http://localhost:8080/code/ai-review', payload);
+      // const { data } = await axios.post('http://localhost:8080/code/ai-review', payload);
+          const { data } = await axios.post(
+          'http://localhost:8080/code/ai-review',
+          payload,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
       setAiReview(data.review);
     } catch (error) {
       setAiReview('Error in AI review, error: ' + error.message);

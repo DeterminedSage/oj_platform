@@ -168,4 +168,4 @@ const addQues = async (req, res) => {
       }
     };
 
-    module.exports = { addQues, getQues, deleteQues, updateQues, getAllQues };
+module.exports = { addQues, getQues, deleteQues, updateQues, getAllQues };

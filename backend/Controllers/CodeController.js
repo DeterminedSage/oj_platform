@@ -2,38 +2,41 @@ const fs = require("fs");
 const path = require("path");
 const jwt = require("jsonwebtoken");
 
-const { executeCode } = require("../executeCode");
-const { generateFile } = require("../generateFile");
-const { aiCodeReview } = require("../aiCodeReview");
 const QuesModel = require("../Models/Question");
 const UserModel = require("../Models/User");
 
-const { normalizeOutput } = require("../utils/normalizeOutput");
-const { cleanupJobDir, cleanupOutputFiles } = require("../utils/cleanup");
+const { generateFile } = require("../Compiler/generateFile");
+const { executeCode } = require("../Compiler/executeCode");
+const { aiCodeReview } = require("../Compiler/aiCodeReview");
 
-exports.runCode = async (req, res) => {
-  const { language = "cpp", code, input } = req.body;
-  if (!code) return res.status(400).json({ success: false, error: "Empty code!" });
+const normalizeOutput = (str) =>
+  str.split("\n").map(line => line.trim()).filter(Boolean).join("\n");
+
+const handleRunCode = async (req, res) => {
+  const { language = "cpp", code, input = "" } = req.body;
+  // console.log("req body");
+  // console.log(req.body);
 
   try {
     const { filePath, jobID, jobDir } = await generateFile(language, code);
     const inputPath = path.join(jobDir, "input.txt");
-    fs.writeFileSync(inputPath, input || "", "utf-8");
+    fs.writeFileSync(inputPath, input, "utf-8");
 
     const output = await executeCode(language, filePath, inputPath);
     res.json({ jobID, output });
 
-    setTimeout(() => cleanupJobDir(jobDir), 5000);
-
-  } catch (err) {
-    const errMsg = err.stderr || err.message || "Execution failed";
-    res.status(500).json({ success: false, error: errMsg });
+    setTimeout(() => {
+      if (fs.existsSync(jobDir)) fs.rmSync(jobDir, { recursive: true, force: true });
+    }, 5000);
+  } catch (error) {
+    // console.log("run code error");
+    // console.log(error);
+    res.status(500).json({ success: false, error: error.stderr || error.message });
   }
 };
 
-exports.submitCode = async (req, res) => {
+const handleSubmitCode = async (req, res) => {
   const { language = "cpp", code, qid } = req.body;
-  if (!code || !qid) return res.status(400).json({ success: false, error: "Missing code or qid" });
 
   try {
     const question = await QuesModel.findOne({ qid });
@@ -41,36 +44,37 @@ exports.submitCode = async (req, res) => {
 
     const { filePath } = await generateFile(language, code);
     const jobId = path.basename(filePath).split(".")[0];
-    const outputDir = path.join(__dirname, "../routes/outputs");
+    const outputDir = path.join(__dirname, "..", "outputs");
     if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir);
 
     const results = [];
 
     for (let i = 0; i < question.testCases.length; i++) {
-      const { input, output: expectedOutput } = question.testCases[i];
+      const { input, output: expected } = question.testCases[i];
       const inputPath = path.join(outputDir, `${jobId}_${i}_input.txt`);
       fs.writeFileSync(inputPath, input, "utf-8");
 
       try {
         const actualOutput = await executeCode(language, filePath, inputPath);
+        const passed = normalizeOutput(actualOutput) === normalizeOutput(expected);
 
         results.push({
           testCase: i + 1,
           input,
-          expected: normalizeOutput(expectedOutput),
+          expected: normalizeOutput(expected),
           received: normalizeOutput(actualOutput),
-          passed: normalizeOutput(expectedOutput) === normalizeOutput(actualOutput),
+          passed,
         });
 
         fs.unlinkSync(inputPath);
-        if (!results.at(-1).passed) break;
+        if (!passed) break;
 
       } catch (err) {
         results.push({
           testCase: i + 1,
           input,
-          expected: normalizeOutput(expectedOutput),
-          received: err.message || "Runtime Error",
+          expected: normalizeOutput(expected),
+          received: err.stderr || err.message,
           passed: false,
         });
 
@@ -79,18 +83,17 @@ exports.submitCode = async (req, res) => {
       }
     }
 
-    const allPassed = results.every((r) => r.passed);
-
+    // update user progress if all passed
+    const allPassed = results.every(r => r.passed);
     if (allPassed) {
       const token = req.headers.authorization?.split(" ")[1];
       if (token) {
         try {
           const decoded = jwt.verify(token, process.env.JWT_SECRET);
           const user = await UserModel.findById(decoded._id);
-
           if (user) {
-            const qObjId = question._id.toString();
-            if (!user.solvedQuestions.includes(qObjId)) {
+            const qidStr = question._id.toString();
+            if (!user.solvedQuestions.includes(qidStr)) {
               user.solvedQuestions.push(question._id);
               user.questionsSolvedTotal++;
               if (question.difficulty === "easy") user.questionsSolvedEasy++;
@@ -100,27 +103,45 @@ exports.submitCode = async (req, res) => {
             }
           }
         } catch (err) {
-          console.error("JWT error:", err.message);
+          console.warn("JWT error:", err.message);
         }
       }
     }
 
-    cleanupOutputFiles(filePath, jobId, outputDir);
-    res.json({ success: true, results });
+    // Cleanup
+    try {
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      const exePath = path.join(outputDir, `${jobId}.exe`);
+      const classPath = filePath.replace(".java", ".class");
+      if (fs.existsSync(exePath)) fs.unlinkSync(exePath);
+      if (fs.existsSync(classPath)) fs.unlinkSync(classPath);
+    } catch (e) {
+      console.warn("Cleanup error:", e.message);
+    }
 
+    res.json({ success: true, results });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
 };
 
-exports.reviewCodeAI = async (req, res) => {
+const handleAICodeReview = async (req, res) => {
+
+  console.log("reached ai code review");
   const { code } = req.body;
-  if (!code) return res.status(400).json({ success: false, error: "Empty code!" });
 
   try {
     const review = await aiCodeReview(code);
     res.json({ review });
-  } catch (err) {
-    res.status(500).json({ success: false, error: `AI review failed: ${err.message}` });
+  } catch (error) {
+    // console.log("AI Code Review Error:");
+    // console.log(error);
+    res.status(500).json({ success: false, error: error.message });
   }
+};
+
+module.exports = {
+  handleRunCode,
+  handleSubmitCode,
+  handleAICodeReview,
 };

@@ -1,9 +1,11 @@
-const UserModel = require('../Models/User');
+const UserModel = require("../Models/User");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const signup = async (req, res) => {
     try {
+        // console.error('Signup error:', err);
         const {name, email,password} = req.body;
         const user = await UserModel.findOne({email});
         if(user){
@@ -17,6 +19,7 @@ const signup = async (req, res) => {
             success: true
         })
     } catch (err) {
+        console.error('Signup error:', err);
         res.status(500).json({
             message: "Internal server error",
             success: false
@@ -58,4 +61,7 @@ const login = async (req, res) => {
     }
 }
 
-module.exports = { signup, login };
+module.exports = {
+    signup,
+    login
+};
