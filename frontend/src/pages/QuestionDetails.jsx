@@ -9,6 +9,7 @@ import { handleError } from '../utils';
 import { ToastContainer } from 'react-toastify';
 import ReactMarkdown from 'react-markdown';
 const token = localStorage.getItem("token");
+const baseURL = process.env.REACT_APP_BACKEND_URL;
 
 function QuestionDetails() {
   const { qid } = useParams();
@@ -28,7 +29,7 @@ function QuestionDetails() {
   useEffect(() => {
     const fetchQuestion = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/crud/getQues?id=${qid}`);
+        const res = await axios.get(`${baseURL}/crud/getQues?id=${qid}`);
         setQuestion(res.data.question);
       } catch (err) {
         console.error("Failed to fetch question:", err);
@@ -46,7 +47,7 @@ function QuestionDetails() {
     }
     try {
       const payload = { language, code, input }; // Use selected language
-      const { data } = await axios.post('http://localhost:8080/code/run', payload, {
+      const { data } = await axios.post(`${baseURL}/code/run`, payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setOutput(data.output);
@@ -71,7 +72,7 @@ function QuestionDetails() {
       };
 
       console.log("Submitting payload:", payload); // Debugging payload
-      const { data } = await axios.post("http://localhost:8080/code/submit", payload, {
+      const { data } = await axios.post(`${baseURL}/code/submit`, payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -90,16 +91,15 @@ function QuestionDetails() {
     };
 
     try {
-      // const { data } = await axios.post('http://localhost:8080/code/ai-review', payload);
-          const { data } = await axios.post(
-          'http://localhost:8080/code/ai-review',
-          payload,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
+      const { data } = await axios.post(
+        `${baseURL}/code/ai-review`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
           }
-        );
+        }
+      );
       setAiReview(data.review);
     } catch (error) {
       setAiReview('Error in AI review, error: ' + error.message);

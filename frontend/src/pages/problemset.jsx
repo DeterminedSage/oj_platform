@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+const baseURL = process.env.REACT_APP_BACKEND_URL;
 
 function Problemset() {
   const [questions, setQuestions] = useState([]);
@@ -11,7 +12,7 @@ function Problemset() {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const res = await axios.get('http://localhost:8080/crud/getAllQues');
+        const res = await axios.get(`${baseURL}/crud/getAllQues`);
         setQuestions(res.data);
       } catch (err) {
         console.error('Failed to fetch questions:', err);

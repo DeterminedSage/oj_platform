@@ -20,7 +20,7 @@ const UserModel = require("./Models/User");
 
 DBConnection();
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT;
 
 app.use(bodyParser.json());
 app.use(cors());

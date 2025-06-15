@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { handleError, handleSuccess } from '../utils'; // assuming same utils
 import 'react-toastify/dist/ReactToastify.css';
+const baseURL = process.env.REACT_APP_BACKEND_URL;
 
 const Report = () => {
   const token = localStorage.getItem('token');
@@ -18,7 +19,7 @@ const Report = () => {
 
     e.preventDefault();
 
-    const url = `http://localhost:8080/crud/getQues?${searchType}=${encodeURIComponent(searchValue)}`
+    const url = `${baseURL}/crud/getQues?${searchType}=${encodeURIComponent(searchValue)}`
     console.log(url);
     try {
       const response = await fetch(url, {
@@ -45,7 +46,7 @@ const Report = () => {
   };
 
   const handleDelete = async () => {
-    const url = `http://localhost:8080/crud/deleteQues/${question.qid}`; // or `id` depending on response
+    const url = `${baseURL}/crud/deleteQues/${question.qid}`; // or `id` depending on response
     console.log(question.qid);
     try {
       const response = await fetch(url, {
@@ -70,7 +71,7 @@ const Report = () => {
   };
 
   const handleUpdate = async () => {
-    const url = `http://localhost:8080/crud/updateQues/${question.qid}`; // adjust path
+    const url = `${baseURL}/crud/updateQues/${question.qid}`; // adjust path
 
     try {
       const response = await fetch(url, {

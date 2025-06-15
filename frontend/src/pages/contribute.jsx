@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { handleError, handleSuccess } from '../utils';
 import { ToastContainer } from 'react-toastify';
+const baseURL = process.env.REACT_APP_BACKEND_URL;
 
 const Contribute = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -90,10 +91,8 @@ const Contribute = () => {
     }
   }
 
-  // console.log("hi");
   try {
-    // console.log("backend called");
-    const url = 'http://localhost:8080/crud/addQues'; // adjust if needed
+    const url = `${baseURL}/crud/addQues`; // adjust if needed
     const token = localStorage.getItem('token');
 
     const response = await fetch(url, {

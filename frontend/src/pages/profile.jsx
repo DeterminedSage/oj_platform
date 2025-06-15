@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+const baseURL = process.env.REACT_APP_BACKEND_URL;
 
 function Profile() {
   const [userData, setUserData] = useState(null);
@@ -14,7 +15,7 @@ function Profile() {
 
     const fetchUserData = async () => {
       try {
-        const res = await axios.get('http://localhost:8080/profile/user', {
+        const res = await axios.get(`${baseURL}/profile/user`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
