@@ -9,7 +9,7 @@ import Register from './pages/register'
 import Problemset from './pages/problemset'
 import Sidebar from './components/Sidebar'
 import QuestionDetails from './pages/QuestionDetails'
-import Profile from './pages/Profile'
+import Profile from './pages/profile'
 
 function Home() {
   const sections = [
