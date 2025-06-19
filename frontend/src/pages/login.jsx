@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import { handleError, handleSuccess } from '../utils'
-const baseURL = process.env.REACT_APP_BACKEND_URL;
+const baseURL = import.meta.env.VITE_BACKEND_URL;
 
 function Login() {
   const [loginInfo, setLoginInfo] = useState({

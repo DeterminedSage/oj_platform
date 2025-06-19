@@ -16,8 +16,6 @@ const addQuestionValidation = (req, res, next) => {
         ).required()
     });
 
-    console.log(req.body);
-
     const { error } = schema.validate(req.body);
 
     if (error) {

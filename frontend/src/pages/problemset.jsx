@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-const baseURL = process.env.REACT_APP_BACKEND_URL;
+// const baseURL = "http://localhost:8080";
+const baseURL = import.meta.env.VITE_BACKEND_URL;
 
 function Problemset() {
   const [questions, setQuestions] = useState([]);

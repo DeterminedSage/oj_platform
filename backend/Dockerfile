@@ -3,19 +3,26 @@ FROM node:alpine
 # Set the working directory inside the container
 WORKDIR /app
 
-# Install GCC and other necessary build tools
-RUN apk update && apk add --no-cache g++
+# Install Java (OpenJDK), GCC, and other necessary tools
+RUN apk update && apk add --no-cache \
+    g++ \
+    openjdk17 \
+    python3 \
+    py3-pip
+
+# Set JAVA_HOME environment variable
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 # Copy only the package.json and package-lock.json files and install dependencies.
-# This allows Docker to cache this layer when package files don't change.
 COPY package*.json ./
 RUN npm install
 
 # Copy the rest of the application code.
-# This layer will only be rebuilt if application code changes.
 COPY . .
 
 EXPOSE 8080
 
-# Specify the command to run when the container starts
+# Start your Node.js backend
 CMD [ "node", "index.js" ]
+

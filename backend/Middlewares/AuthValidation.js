@@ -4,7 +4,6 @@ require('dotenv').config();
 
 const signupValidation = (req, res, next) => {
 
-    console.log("reached signupValidation middleware");
     const schema = joi.object({
         name: joi.string().min(3).max(100).required(),
         email: joi.string().email().required(),
@@ -48,7 +47,6 @@ const authMiddleware = (req, res, next) => {
         const authHeader = req.headers.authorization;
 
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            console.log("return 401");
             return res.status(401).json({ message: 'Authorization token missing or invalid' });
         }
 
@@ -57,8 +55,6 @@ const authMiddleware = (req, res, next) => {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET); 
             req.user = decoded;
-            console.log("Decoded user:", req.user);
-            console.log("this is issue"); //code is reached here
             next();
         } catch (err) {
             return res.status(403).json({ message: 'Invalid or expired token' });

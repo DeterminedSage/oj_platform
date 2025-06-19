@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { handleError, handleSuccess } from '../utils'; // assuming same utils
 import 'react-toastify/dist/ReactToastify.css';
-const baseURL = process.env.REACT_APP_BACKEND_URL;
+const baseURL = import.meta.env.VITE_BACKEND_URL;
+// const baseURL = "http://localhost:8080";
 
 const Report = () => {
   const token = localStorage.getItem('token');

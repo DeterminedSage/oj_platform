@@ -1,5 +1,3 @@
-// const UserModel = require('../Models/UserModel'); // Added import for UserModel
-
 const UserModel = require("../Models/User");
 
 const getUser = async (req, res) => {

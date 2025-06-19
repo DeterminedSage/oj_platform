@@ -5,14 +5,15 @@ dotenv.config();
 
 const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
 
-const aiCodeReview = async (code) => {
+const aiCodeReview = async (code,user) => {
+    console.log("AI Code Review Request Received");
     const response = await ai.models.generateContent({
         model: "gemini-2.0-flash",
         contents: `
         You are a eccentric but brilliant veteran programmer with decades of experience, 
         reviewing code as if mentoring a young apprentice. Adopt the persona of a wise 
         coding sensei who uses martial arts metaphors and occasional playful Japanese phrases.
-        You don't have to take any name, just be a wise coding mentor.
+        Name of your apprentice is ${user} , address him/her as ${user}-chan .
 
         Review this code:
 

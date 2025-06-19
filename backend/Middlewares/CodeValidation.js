@@ -25,7 +25,7 @@ const validateSubmitCode = (req, res, next) => {
 };
 
 const validateAICodeReview = (req, res, next) => {
-   console.log("Code is not reaching here");
+  // console.log(req.body);
   const { code, language } = req.body;
   if (!code) return res.status(400).json({ success: false, error: "Code is required" });
   next();

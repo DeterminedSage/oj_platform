@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-const baseURL = process.env.REACT_APP_BACKEND_URL;
+const baseURL = import.meta.env.VITE_BACKEND_URL;
+// const baseURL = "http://localhost:8080";
 
 function Profile() {
   const [userData, setUserData] = useState(null);

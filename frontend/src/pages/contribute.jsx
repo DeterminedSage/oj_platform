@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { handleError, handleSuccess } from '../utils';
 import { ToastContainer } from 'react-toastify';
-const baseURL = process.env.REACT_APP_BACKEND_URL;
+// const baseURL = import.meta.env.REACT_APP_BACKEND_URL;
+const baseURL = import.meta.env.VITE_BACKEND_URL;
 
 const Contribute = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

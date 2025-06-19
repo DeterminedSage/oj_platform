@@ -9,7 +9,8 @@ import { handleError } from '../utils';
 import { ToastContainer } from 'react-toastify';
 import ReactMarkdown from 'react-markdown';
 const token = localStorage.getItem("token");
-const baseURL = process.env.REACT_APP_BACKEND_URL;
+const user = localStorage.getItem("loggedInUser");
+const baseURL = import.meta.env.VITE_BACKEND_URL;
 
 function QuestionDetails() {
   const { qid } = useParams();
@@ -87,7 +88,8 @@ function QuestionDetails() {
   const handleAiReview = async () => {
     const payload = {
       language, // Use selected language
-      code
+      code,
+      user
     };
 
     try {

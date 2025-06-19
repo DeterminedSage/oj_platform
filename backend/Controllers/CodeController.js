@@ -14,8 +14,6 @@ const normalizeOutput = (str) =>
 
 const handleRunCode = async (req, res) => {
   const { language = "cpp", code, input = "" } = req.body;
-  // console.log("req body");
-  // console.log(req.body);
 
   try {
     const { filePath, jobID, jobDir } = await generateFile(language, code);
@@ -29,8 +27,6 @@ const handleRunCode = async (req, res) => {
       if (fs.existsSync(jobDir)) fs.rmSync(jobDir, { recursive: true, force: true });
     }, 5000);
   } catch (error) {
-    // console.log("run code error");
-    // console.log(error);
     res.status(500).json({ success: false, error: error.stderr || error.message });
   }
 };
@@ -127,15 +123,12 @@ const handleSubmitCode = async (req, res) => {
 
 const handleAICodeReview = async (req, res) => {
 
-  console.log("reached ai code review");
-  const { code } = req.body;
+  const { code , user } = req.body;
 
   try {
-    const review = await aiCodeReview(code);
+    const review = await aiCodeReview(code,user);
     res.json({ review });
   } catch (error) {
-    // console.log("AI Code Review Error:");
-    // console.log(error);
     res.status(500).json({ success: false, error: error.message });
   }
 };
