@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { handleError, handleSuccess } from '../utils';
+
 const baseURL = import.meta.env.VITE_BACKEND_URL;
 
 function Register() {
@@ -10,7 +11,7 @@ function Register() {
     email: '',
     password: '',
     confirmPassword: '',
-    termsAccepted: false
+    termsAccepted: false,
   });
 
   const navigate = useNavigate();
@@ -62,9 +63,9 @@ function Register() {
   return (
     <div className="py-10">
       <section className="bg-gray-50">
-        <div className="flex flex-col md:flex-row items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 mt-10 mb-20">
+        <div className="ml-12 md:ml-32 lg:ml-52 flex flex-col md:flex-row md:gap-x-48 items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
           {/* Register Box */}
-          <div className="w-full md:w-2/3 bg-gray-900 rounded-lg shadow border-gray-700 sm:max-w-md xl:p-0">
+          <div className="w-full md:w-2/3 bg-gray-900 rounded-lg shadow border border-gray-700 sm:max-w-md xl:p-0">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight text-white md:text-2xl">
                 Create an account
@@ -154,11 +155,12 @@ function Register() {
           </div>
 
           {/* Right-side Image */}
-          <div className="hidden md:block w-1/3 p-4">
+          <div className="hidden md:block w-1/3" style={{ height: '100%', overflow: 'hidden' }}>
             <img
               src="https://raw.githubusercontent.com/DeterminedSage/images/refs/heads/main/sasuke2_bgr.png"
               alt="Register Illustration"
-              className="scale-[0.60] object-contain"
+              className="scale-[1.0] object-contain"
+              style={{ height: '100%' }}
             />
           </div>
         </div>
@@ -168,4 +170,6 @@ function Register() {
 }
 
 export default Register;
+
+
 
