@@ -70,21 +70,19 @@ function Profile() {
   }
 
   return (
-    <div className="max-w-xl mx-auto mt-20 p-6 bg-white shadow-lg rounded-lg dark:bg-gray-800 text-gray-900 dark:text-white flex flex-col md:flex-row items-start gap-4 md:gap-8">
-      
+    <div className="max-w-xl mx-auto mt-20 mb-20 p-6 bg-gray-900 shadow-lg rounded-lg text-white flex flex-col md:flex-row items-start gap-4 md:gap-8">
       {/* Text Section */}
       <div className="md:w-2/3 w-full text-left space-y-2">
         <h2 className="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
           Profile
         </h2>
-        <div><span className="font-semibold text-blue-600">Name:</span> {userData.name}</div>
-        <div><span className="font-semibold text-blue-600">Email:</span> {userData.email}</div>
-        <div><span className="font-semibold text-blue-600">Division:</span> {division}</div>
-        <div><span className="font-semibold text-blue-600">Total Questions Solved:</span> {total}</div>
-        <div><span className="font-semibold text-blue-600">Easy: </span> {userData.questionsSolvedEasy}</div>
-        <div><span className="font-semibold text-blue-600">Medium: </span> {userData.questionsSolvedMedium}</div>
-        <div><span className="font-semibold text-blue-600">Hard: </span> {userData.questionsSolvedHard}</div>
-        {/* <div><span className="font-semibold text-blue-600">Total Questions Solved:</span> {total}</div> */}
+        <div><span className="font-semibold text-blue-400">Name:</span> {userData.name}</div>
+        <div><span className="font-semibold text-blue-400">Email:</span> {userData.email}</div>
+        <div><span className="font-semibold text-blue-400">Division:</span> {division}</div>
+        <div><span className="font-semibold text-blue-400">Total Questions Solved:</span> {total}</div>
+        <div><span className="font-semibold text-blue-400">Easy: </span> {userData.questionsSolvedEasy}</div>
+        <div><span className="font-semibold text-blue-400">Medium: </span> {userData.questionsSolvedMedium}</div>
+        <div><span className="font-semibold text-blue-400">Hard: </span> {userData.questionsSolvedHard}</div>
         <div className="mt-4 italic text-yellow-400">{message}</div>
       </div>
 
