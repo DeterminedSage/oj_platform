@@ -9,7 +9,6 @@ import { handleError } from '../utils';
 import { ToastContainer } from 'react-toastify';
 import ReactMarkdown from 'react-markdown';
 const token = localStorage.getItem("token");
-const user = localStorage.getItem("loggedInUser");
 const baseURL = import.meta.env.VITE_BACKEND_URL;
 
 function QuestionDetails() {
@@ -89,7 +88,7 @@ function QuestionDetails() {
     const payload = {
       language, // Use selected language
       code,
-      user
+      user: localStorage.getItem("loggedInUser"), // Ensure user is fetched from localStorage
     };
 
     try {
