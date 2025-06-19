@@ -1,5 +1,5 @@
 import './App.css'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Contribute from './pages/contribute'
@@ -10,6 +10,7 @@ import Problemset from './pages/problemset'
 import Sidebar from './components/Sidebar'
 import QuestionDetails from './pages/QuestionDetails'
 import Profile from './pages/profile'
+import { useEffect } from 'react'
 
 function Home() {
   const sections = [
@@ -42,7 +43,7 @@ Sharpen your problem-design skills, gain recognition in the community, and becom
   ];
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-6 py-12 space-y-10">
+    <div className="w-full flex flex-col items-center justify-center px-6 py-6 space-y-10">
       {sections.map((section, index) => (
         <div
           key={index}
@@ -78,11 +79,20 @@ Sharpen your problem-design skills, gain recognition in the community, and becom
 }
 
 function App() {
+  const location = useLocation();
+
+  // Scroll to top on route change (optional UX improvement)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  // Optional: conditionally show Sidebar
+  const showSidebar = !['/login', '/register'].includes(location.pathname);
+
   return (
-    <div className="flex flex-col min-h-screen">
-            <Navbar />
-      <Sidebar />
-      {/* <Navbar /> */}
+    <div className="flex flex-col min-h-screen bg-white">
+      <Navbar />
+      {showSidebar && <Sidebar />}
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -97,7 +107,9 @@ function App() {
       </main>
       <Footer />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
+
+

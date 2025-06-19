@@ -1,36 +1,98 @@
-import React from 'react'
+// import React from 'react';
+
+// const Footer = () => {
+//   return (
+//     <footer className="bg-gray-900 shadow-sm w-full">
+//       <div className="w-full max-w-screen-xl mx-auto px-4 py-6">
+//         <div className="flex flex-col sm:flex-row items-center justify-between">
+//           <a href="/" className="flex items-center mb-4 sm:mb-0 space-x-1 rtl:space-x-reverse ml-4">
+//             <img
+//               src="https://raw.githubusercontent.com/DeterminedSage/images/refs/heads/main/ultimate_final.png"
+//               className="h-8"
+//               alt="Leaf Coders Logo"
+//             />
+//             <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">
+//               Leaf Coders
+//             </span>
+//           </a>
+//           <span className="text-sm text-gray-400 text-center sm:text-right">
+//             Made with <span className="text-red-500">❤️</span> by{' '}
+//               DeterminedSage
+//             {' '}
+//             |
+//             <a
+//               href=""
+//               target="_blank"
+//               rel="noopener noreferrer"
+//               className="hover:underline text-white ml-1"
+//             >
+//             Github
+//             </a>
+//             {' '}
+//             |
+//             <a
+//               href="https://www.linkedin.com/in/akshatsharma-nsut/"
+//               target="_blank"
+//               rel="noopener noreferrer"
+//               className="hover:underline text-white ml-1"
+//             >
+//               LinkedIn
+//             </a>
+//           </span>
+//         </div>
+//       </div>
+//     </footer>
+//   );
+// };
+
+// export default Footer;
+
+
+import React from 'react';
 
 const Footer = () => {
   return (
-    <div>
-        <footer className="bg-white rounded-lg shadow-sm dark:bg-gray-900 m-4">
-            <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
-                <div className="sm:flex sm:items-center sm:justify-between">
-                    <a href="/" className="flex items-center mb-4 sm:mb-0 space-x-1 rtl:space-x-reverse">
-                        <img src="https://raw.githubusercontent.com/DeterminedSage/images/refs/heads/main/ultimate_final.png" className="h-8" alt="Flowbite Logo" />
-                        <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Leaf Coders</span>
-                    </a>
-                    <ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
-                        <li>
-                            <a href="/" className="hover:underline me-4 md:me-6">About</a>
-                        </li>
-                        <li>
-                            <a href="/" className="hover:underline me-4 md:me-6">Privacy Policy</a>
-                        </li>
-                        <li>
-                            <a href="/" className="hover:underline me-4 md:me-6">Licensing</a>
-                        </li>
-                        <li>
-                            <a href="/" className="hover:underline">Contact</a>
-                        </li>
-                    </ul>
-                </div>
-                <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-                <span className="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2025 <a href="/" className="hover:underline">Leaf Coders™</a>. All Rights Reserved.</span>
-            </div>
-        </footer>
-    </div>
-  )
-}
+    <footer className="bg-gray-900 shadow-sm w-full mt-auto">
+      <div className="w-full max-w-screen-xl mx-auto px-4 py-4">
+        <div className="flex flex-col sm:flex-row items-center justify-between">
+          <a href="/" className="flex items-center mb-4 sm:mb-0 space-x-1 rtl:space-x-reverse ml-4">
+            <img
+              src="https://raw.githubusercontent.com/DeterminedSage/images/refs/heads/main/ultimate_final.png"
+              className="h-8"
+              alt="Leaf Coders Logo"
+            />
+            <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">
+              Leaf Coders
+            </span>
+          </a>
+          <span className="text-sm text-gray-400 text-center sm:text-right">
+            Made with <span className="text-red-500">❤️</span> by{' '}
+            DeterminedSage |{' '}
+            <a
+              href="https://github.com/DeterminedSage"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline text-white ml-1"
+            >
+              Github
+            </a>{' '}
+            |{' '}
+            <a
+              href="https://www.linkedin.com/in/akshatsharma-nsut/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline text-white ml-1"
+            >
+              LinkedIn
+            </a>
+          </span>
+        </div>
+      </div>
+    </footer>
+  );
+};
 
-export default Footer
+export default Footer;
+
+
+

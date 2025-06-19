@@ -36,8 +36,7 @@ function Sidebar() {
 
       {/* Sidebar - Appears only on hover */}
       <aside className="h-full w-0 overflow-hidden group-hover:w-32 transition-all duration-300 z-50">
-        <div className="h-full bg-white dark:bg-gray-900 border-r dark:border-gray-700 p-4 w-32">
-          {/* <h2 className="text-lg font-semibold text-gray-700 dark:text-white mb-4">Navigation</h2> */}
+        <div className="h-full bg-gray-900 border-r border-gray-700 p-4 w-32">
           <ul className="space-y-2">
             {links.map((link) => (
               <li key={link.path}>
@@ -45,8 +44,8 @@ function Sidebar() {
                   to={link.path}
                   className={`block px-3 py-2 rounded-md text-sm ${
                     location.pathname === link.path
-                      ? 'bg-blue-100 dark:bg-blue-800 text-blue-700 dark:text-white font-medium'
-                      : 'text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
+                      ? 'bg-blue-800 text-white font-medium'
+                      : 'text-white hover:bg-gray-700'
                   }`}
                 >
                   {link.label}

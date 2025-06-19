@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { handleError, handleSuccess } from '../utils';
 const baseURL = import.meta.env.VITE_BACKEND_URL;
-// const baseURL = "http://localhost:8080";
 
 function Register() {
   const [signupInfo, setSignupInfo] = useState({
@@ -65,14 +64,14 @@ function Register() {
       <section className="bg-gray-50">
         <div className="flex flex-col md:flex-row items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 mt-10 mb-20">
           {/* Register Box */}
-          <div className="w-full md:w-2/3 bg-white rounded-lg shadow dark:border sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <div className="w-full md:w-2/3 bg-gray-900 rounded-lg shadow border-gray-700 sm:max-w-md xl:p-0">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-              <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+              <h1 className="text-xl font-bold leading-tight tracking-tight text-white md:text-2xl">
                 Create an account
               </h1>
               <form className="space-y-2 md:space-y-3" onSubmit={handleSignup}>
                 <div>
-                  <label htmlFor="fullName" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Full Name</label>
+                  <label htmlFor="fullName" className="block mb-2 text-sm font-medium text-white">Full Name</label>
                   <input
                     onChange={handleChange}
                     value={signupInfo.fullName}
@@ -81,11 +80,11 @@ function Register() {
                     id="fullName"
                     autoComplete="name"
                     placeholder="John Doe"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                    className="bg-gray-800 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                  <label htmlFor="email" className="block mb-2 text-sm font-medium text-white">Your email</label>
                   <input
                     onChange={handleChange}
                     value={signupInfo.email}
@@ -94,11 +93,11 @@ function Register() {
                     id="email"
                     autoComplete="email"
                     placeholder="name@company.com"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                    className="bg-gray-800 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   />
                 </div>
                 <div>
-                  <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                  <label htmlFor="password" className="block mb-2 text-sm font-medium text-white">Password</label>
                   <input
                     onChange={handleChange}
                     value={signupInfo.password}
@@ -107,11 +106,11 @@ function Register() {
                     id="password"
                     autoComplete="new-password"
                     placeholder="••••••••"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                    className="bg-gray-800 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   />
                 </div>
                 <div>
-                  <label htmlFor="confirmPassword" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password</label>
+                  <label htmlFor="confirmPassword" className="block mb-2 text-sm font-medium text-white">Confirm password</label>
                   <input
                     onChange={handleChange}
                     value={signupInfo.confirmPassword}
@@ -120,7 +119,7 @@ function Register() {
                     id="confirmPassword"
                     autoComplete="new-password"
                     placeholder="••••••••"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                    className="bg-gray-800 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   />
                 </div>
                 <div className="flex items-start">
@@ -131,12 +130,12 @@ function Register() {
                       name="termsAccepted"
                       onChange={handleChange}
                       checked={signupInfo.termsAccepted}
-                      className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600"
+                      className="w-4 h-4 border border-gray-600 rounded bg-gray-800 focus:ring-3 focus:ring-primary-300"
                     />
                   </div>
                   <div className="ml-3 text-sm">
-                    <label htmlFor="terms" className="font-light text-gray-500 dark:text-gray-300">
-                      I accept the <a href="#" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Terms and Conditions</a>
+                    <label htmlFor="terms" className="font-light text-gray-300">
+                      I accept the <a href="#" className="font-medium text-primary-500 hover:underline">Terms and Conditions</a>
                     </label>
                   </div>
                 </div>
@@ -146,8 +145,8 @@ function Register() {
                 >
                   Create an account
                 </button>
-                <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                  Already have an account? <Link to="/login" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</Link>
+                <p className="text-sm font-light text-gray-300">
+                  Already have an account? <Link to="/login" className="font-medium text-primary-500 hover:underline">Login here</Link>
                 </p>
               </form>
               <ToastContainer />
@@ -169,12 +168,4 @@ function Register() {
 }
 
 export default Register;
-
-
-
-
-
-
-
-
 

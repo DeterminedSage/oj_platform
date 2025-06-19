@@ -30,7 +30,9 @@ function Login() {
     }
 
     try {
+      console.log(baseURL);
       const url = `${baseURL}/auth/login`;
+      console.log(url);
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -76,24 +78,48 @@ function Login() {
             />
           </div>
           {/* Login Box */}
-          <div className="w-full md:w-2/3 bg-white rounded-lg shadow dark:border sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <div className="w-full md:w-2/3 bg-gray-900 rounded-lg shadow border-gray-700 sm:max-w-md xl:p-0">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-              <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+              <h1 className="text-xl font-bold leading-tight tracking-tight text-white md:text-2xl">
                 Sign in to your account
               </h1>
               <form className="space-y-2 md:space-y-3" action="#" onSubmit={handleLogin}>
                 <div>
-                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                    <input onChange={handleChange} value={loginInfo.email} type="email" name="email" autoFocus id="email" autoComplete="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" />
+                  <label htmlFor="email" className="block mb-2 text-sm font-medium text-white">Email</label>
+                  <input
+                    onChange={handleChange}
+                    value={loginInfo.email}
+                    type="email"
+                    name="email"
+                    autoFocus
+                    id="email"
+                    autoComplete="email"
+                    className="bg-gray-800 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    placeholder="name@company.com"
+                  />
                 </div>
                 <div>
-                    <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                    <input onChange={handleChange} value={loginInfo.password} type="password" name="password" id="password" autoComplete="new-password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                  <label htmlFor="password" className="block mb-2 text-sm font-medium text-white">Password</label>
+                  <input
+                    onChange={handleChange}
+                    value={loginInfo.password}
+                    type="password"
+                    name="password"
+                    id="password"
+                    autoComplete="new-password"
+                    placeholder="••••••••"
+                    className="bg-gray-800 border border-gray-600 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  />
                 </div>
 
-                <button type="submit" className="w-full text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 my-2">SignIn</button>
-                <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                    Don't have an account? <Link to="/register" className="font-medium text-primary-600 hover:underline dark:text-primary-500">SignUp here</Link>
+                <button
+                  type="submit"
+                  className="w-full text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                >
+                  SignIn
+                </button>
+                <p className="text-sm font-light text-gray-300">
+                  Don't have an account? <Link to="/register" className="font-medium text-primary-500 hover:underline">SignUp here</Link>
                 </p>
               </form>
               <ToastContainer />
@@ -106,10 +132,4 @@ function Login() {
 }
 
 export default Login
-
-
-
-
-
-
 
