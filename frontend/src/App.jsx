@@ -38,7 +38,7 @@ Whether you’re a beginner refining your logic or a seasoned coder looking for 
 Whether it’s a brain-twisting algorithm, a real-world application, or a fun puzzle — your problems can inspire learners, test experts, and build a culture of creative thinking.
 Sharpen your problem-design skills, gain recognition in the community, and become part of something bigger than just solving — start creating.`,
       image:
-        "https://raw.githubusercontent.com/DeterminedSage/images/refs/heads/main/kakashi_chibi-removebg-preview.png",
+        "https://raw.githubusercontent.com/DeterminedSage/images/refs/heads/main/kakashi%20chibi%20v2.png",
     },
   ];
 
