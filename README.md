@@ -34,5 +34,25 @@ In a new terminal ,
 cd backend && npm install && npm start
 ```
 
-Note: Ensure MongoDB is running locally or update the backend config to use a remote MongoDB URI.
+### 4. Setting up environment variables for running on local machine
+
+In the frontend direcotry , create a .env file and add the following :-  
+
+```.env
+VITE_BACKEND_URL=http://localhost:8080
+```
+
+In the backend direcotry , create a .env file and add the following parameters :-  
+
+```.env
+PORT=8080
+MONGODB_URL=
+JWT_SECRET="any-secret"
+GOOGLE_API_KEY = 
+```
+
+Google api key can be genrated via Google studios (refer : https://ai.google.dev/)
+Ensure to add a proper Mongodb-URL for proper operations
+
+
 
