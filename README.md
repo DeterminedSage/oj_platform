@@ -19,3 +19,20 @@ To run the project locally:
 git clone https://github.com/DeterminedSage/oj_platform.git
 cd oj_platform
 ```
+
+### 2. Install and Run Frontend
+
+```bash
+cd frontend && npm install && npm run dev
+```
+
+### 3. Install and Run Backend
+
+In a new terminal , 
+
+```bash
+cd backend && npm install && npm start
+```
+
+Note: Ensure MongoDB is running locally or update the backend config to use a remote MongoDB URI.
+
